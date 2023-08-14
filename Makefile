@@ -2,9 +2,10 @@ CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wpedantic -std=c++20
 LDFLAGS =
 
 TARGET =
-CXX = $(TARGET)g++
+CXX = $(TARGET)clang++
 
 SRC = main.cpp
+SRC += lexer.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 DEP = $(patsubst %.cpp,%.d,$(SRC))
 

@@ -189,6 +189,6 @@ struct token_t {
 
 };
 
-}
-
 using token = dsp::token_t<num_t>;
+
+}

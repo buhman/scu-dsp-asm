@@ -2,25 +2,27 @@
 #include <fstream>
 #include <string>
 
+#include "lexer.hpp"
 #include "token.hpp"
 
-static bool had_error = false;
+namespace dsp {
 
-static void report(int line, std::string where, std::string message)
-{
-  std::cerr << "[line " << line << "] Error" << where << ": " << message;
-  had_error = true;
-}
+bool had_error = false;
 
-void error(int line, std::string message)
-{
-  report(line, "", message);
 }
 
 static void run(std::string source)
 {
+  using namespace dsp;
+
   std::string_view buf {source};
-  (void)buf;
+  lexer_t lexer {buf};
+  while (std::optional<token> token_o = lexer.scan_token()) {
+    std::cout << *token_o << std::endl;
+    if (token_o->type == token::type_t::eof) {
+      break;
+    }
+  }
 }
 
 static void run_prompt()
@@ -49,13 +51,13 @@ static int run_file(char const * const filename)
     return -1;
   }
   run(buf);
-  return had_error;
+  return dsp::had_error;
 }
 
 int main(const int argc, char const * const argv[])
 {
   switch (argc) {
-  case 1: run_prompt(); return had_error;
+  case 1: run_prompt(); return dsp::had_error;
   case 2: return run_file(argv[1]);
   default:
     std::cerr << "Usage: " << argv[0] << " [filename]" << std::endl;

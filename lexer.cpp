@@ -7,6 +7,7 @@
 #include "num.hpp"
 #include "lexer.hpp"
 #include "keyword.hpp"
+#include "error.hpp"
 
 namespace dsp {
 
@@ -59,7 +60,7 @@ struct dec_t {
   }
 
   template <typename N>
-  constexpr static token_t<N> parse(const std::string_view s)
+  constexpr static N parse(const std::string_view s)
   {
     return parse_number<N, 10>(s);
   }
@@ -74,145 +75,137 @@ struct hex_t {
   }
 
   template <typename N>
-  constexpr static token_t<N> parse(const std::string_view s)
+  constexpr static N parse(const std::string_view s)
   {
     return parse_number<N, 16>(s);
   }
 };
 
-constexpr bool alpha_p(const char c)
+inline constexpr bool alpha_p(const char c)
 {
   return (c >= 'a' && c <= 'z')
     || (c >= 'A' && c <= 'Z');
 }
 
-constexpr bool alpha_numeric_p(const char c)
+inline constexpr bool alpha_numeric_p(const char c)
 {
   return alpha_p(c) || dec_t::pred(c) || (c == '_');
 }
 
-struct lexer_t {
-  const std::string_view source;
-  std::string_view::size_type start_ix;
-  std::string_view::size_type current_ix;
-  token_pos_t pos;
+bool lexer_t::at_end_p()
+{
+  return current_ix >= source.length();
+}
 
-  lexer_t() = delete;
+char lexer_t::peek()
+{
+  if (at_end_p()) return '\0';
+  return source[current_ix];
+}
 
-  constexpr lexer_t(const std::string_view source)
-    : source(source), start_ix(0), pos{ .line = 1, .col = 0}
-  { }
+bool lexer_t::match(const char expected)
+{
+  if (at_end_p()) return false;
+  else if (source[current_ix] != expected) return false;
+  pos.col++;
+  current_ix++;
+  return true;
+}
 
-  bool at_end_p()
-  {
-    return current_ix >= source.length();
-  }
+char lexer_t::advance()
+{
+  pos.col++;
+  return source[current_ix++];
+}
 
-  char peek()
-  {
-    if (at_end_p()) return '\0';
-    return source[current_ix];
-  }
+const std::string_view lexer_t::lexeme()
+{
+  return source.substr(start_ix, current_ix - start_ix);
+}
 
-  bool match(const char expected)
-  {
-    if (at_end_p()) return false;
-    else if (source[current_ix] != expected) return false;
-    pos.col++;
-    current_ix++;
-    return true;
-  }
+template <typename T>
+token lexer_t::_number()
+{
+  while (T::pred(peek())) advance();
 
-  char advance()
-  {
-    pos.col++;
-    return source[current_ix++];
-  }
+  return {pos, token::number, lexeme(), T::template parse<num_t>(lexeme())};
+}
 
-  const std::string_view lexeme()
-  {
-    return source.substr(start_ix, current_ix);
-  }
+token lexer_t::_identifier()
+{
+  while (alpha_numeric_p(peek())) advance();
+  std::optional<enum token::type_t> keyword = keyword::find(lexeme());
+  if (keyword) return {pos, *keyword, lexeme()};
+  else         return {pos, token::identifier, lexeme()};
+}
 
-  template <typename T>
-  token _number()
-  {
-    while (T::pred(peek())) advance();
+std::optional<token> lexer_t::scan_token()
+{
+  using enum token::type_t;
 
-    return {pos, token::number, lexeme(), T::parse(lexeme())};
-  }
+  if (at_end_p())
+    return {{pos, eof, ""}};
 
-  token _identifier()
-  {
-    while (alpha_numeric_p(peek())) advance();
-    std::optional<enum token::type_t> keyword = keyword::find(lexeme());
-    if (keyword) return {pos, *keyword, lexeme()};
-    else         return {pos, token::identifier, lexeme()};
-  }
+  start_ix = current_ix;
 
-  token scan_token()
-  {
-    using enum token::type_t;
-
-    start_ix = current_ix;
-
-    const char c = advance();
-    switch (c) {
-    case '(': return {pos, left_paren, lexeme()};
-    case ')': return {pos, right_paren, lexeme()};
-    case ',': return {pos, comma, lexeme()};
-    case '.': return {pos, dot, lexeme()};
-    case '+': return {pos, plus, lexeme()};
-    case '-': return {pos, minus, lexeme()};
-    case '*': return {pos, star, lexeme()};
-    case '/': return {pos, slash, lexeme()};
-    case '%': return {pos, percent, lexeme()};
-    case '~': return {pos, tilde, lexeme()};
-    case '&': return {pos, ampersand, lexeme()};
-    case '|': return {pos, bar, lexeme()};
-    case '^': return {pos, carot, lexeme()};
-    case '<':
-      if (match('<')) return {pos, left_shift, lexeme()};
-      break;
-    case '>':
-      if (match('>')) return {pos, right_shift, lexeme()};
-      break;
-    case ';':
-      while (!at_end_p() && peek() != '\n') advance();
-      break;
-    case ' ':
-    case '\r':
-    case '\t':
-      break;
-    case '\n':
-      pos.line++;
-      pos.col = 0;
-      break;
-    case '$':
-      if (hex_t::pred(peek())) {
-	start_ix += 1;
-	return _number<hex_t>();
-      }
-      [[fallthrough]];
-    case '0':
-      if (match('x')) {
-	if (hex_t::pred(peek())) {
-	  start_ix += 2;
-	  return _number<hex_t>();
-	}
-      }
-      [[fallthrough]];
-    default:
-      if (dec_t::pred(c)) {
-	return _number<dec_t>();
-      } else if (alpha_p(c)) {
-	return _identifier();
-      } else {
-	//error(pos.line, "Unexpected character.");
-      }
-      break;
+  const char c = advance();
+  switch (c) {
+  case '(': return {{pos, left_paren, lexeme()}};
+  case ')': return {{pos, right_paren, lexeme()}};
+  case ',': return {{pos, comma, lexeme()}};
+  case '.': return {{pos, dot, lexeme()}};
+  case '+': return {{pos, plus, lexeme()}};
+  case '-': return {{pos, minus, lexeme()}};
+  case '*': return {{pos, star, lexeme()}};
+  case '/': return {{pos, slash, lexeme()}};
+  case '%': return {{pos, percent, lexeme()}};
+  case '~': return {{pos, tilde, lexeme()}};
+  case '&': return {{pos, ampersand, lexeme()}};
+  case '|': return {{pos, bar, lexeme()}};
+  case '^': return {{pos, carot, lexeme()}};
+  case '<':
+    if (match('<')) return {{pos, left_shift, lexeme()}};
+    break;
+  case '>':
+    if (match('>')) return {{pos, right_shift, lexeme()}};
+    break;
+  case ';':
+    while (!at_end_p() && peek() != '\n') advance();
+    break;
+  case ' ':
+  case '\r':
+  case '\t':
+    break;
+  case '\n':
+    pos.line++;
+    pos.col = 0;
+    break;
+  case '$':
+    if (hex_t::pred(peek())) {
+      start_ix += 1;
+      return {_number<hex_t>()};
     }
+    [[fallthrough]];
+  case '0':
+    if (match('x')) {
+      if (hex_t::pred(peek())) {
+        start_ix += 2;
+        return {_number<hex_t>()};
+      }
+    }
+    [[fallthrough]];
+  default:
+    if (dec_t::pred(c)) {
+      return {_number<dec_t>()};
+    } else if (alpha_p(c)) {
+      return {_identifier()};
+    } else {
+      error(pos.line, pos.col - 1, "Unexpected character.");
+      return {};
+    }
+    break;
   }
-};
+  __builtin_unreachable();
+}
 
 }
