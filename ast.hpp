@@ -16,7 +16,9 @@ struct ast_printer_t : visitor_t<void>
 
   std::ostream& os;
 
-  void visit(const assign_t * expr) const;
+  void visit(const unary_t * unary) const;
+  void visit(const binary_t * binary) const;
+  void visit(const grouping_t * grouping) const;
   void visit(const literal_t * literal) const;
 
   void parenthesize(const std::string_view s, const expr_t * a) const;

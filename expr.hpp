@@ -24,13 +24,22 @@ struct expr_accept_t : expr_t {
     }
 };
 
-struct assign_t : expr_accept_t<assign_t>
+struct binary_t : expr_accept_t<binary_t>
 {
-  assign_t(token_t& name, expr_t& value)
-    : name(name), value(value) {}
+  binary_t(expr_t * left, token_t oper, expr_t * right)
+    : left(left), oper(oper), right(right) {}
 
-  const token_t name;
-  const expr_t& value;
+  const expr_t * left;
+  const token_t oper;
+  const expr_t * right;
+};
+
+struct grouping_t : expr_accept_t<grouping_t>
+{
+  grouping_t(expr_t * expr)
+    : expr(expr) {}
+
+  const expr_t * expr;
 };
 
 struct literal_t : expr_accept_t<literal_t>
@@ -39,6 +48,15 @@ struct literal_t : expr_accept_t<literal_t>
     : value(value) {}
 
   const num_t value;
+};
+
+struct unary_t : expr_accept_t<unary_t>
+{
+  unary_t(token_t oper, expr_t * expr)
+    : oper(oper), expr(expr) {}
+
+  const token_t oper;
+  const expr_t * expr;
 };
 
 }

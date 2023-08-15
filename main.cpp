@@ -15,9 +15,9 @@ bool had_error = false;
 static void print()
 {
   dsp::literal_t l(56);
-  std::string_view s("asdf");
-  dsp::token_t t({0, 0}, dsp::token_t::identifier, s);
-  dsp::assign_t a(t, l);
+  std::string_view s("-");
+  dsp::token_t t({0, 0}, dsp::token_t::minus, s);
+  dsp::unary_t a(t, &l);
   dsp::ast_printer_t p(std::cout);
   p.visit(&a);
 }
