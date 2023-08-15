@@ -124,24 +124,24 @@ const std::string_view lexer_t::lexeme()
 }
 
 template <typename T>
-token lexer_t::_number()
+token_t lexer_t::_number()
 {
   while (T::pred(peek())) advance();
 
-  return {pos, token::number, lexeme(), T::template parse<num_t>(lexeme())};
+  return {pos, token_t::number, lexeme(), T::template parse<num_t>(lexeme())};
 }
 
-token lexer_t::_identifier()
+token_t lexer_t::_identifier()
 {
   while (alpha_numeric_p(peek())) advance();
-  std::optional<enum token::type_t> keyword = keyword::find(lexeme());
+  std::optional<enum token_t::type_t> keyword = keyword::find(lexeme());
   if (keyword) return {pos, *keyword, lexeme()};
-  else         return {pos, token::identifier, lexeme()};
+  else         return {pos, token_t::identifier, lexeme()};
 }
 
-std::optional<token> lexer_t::scan_token()
+std::optional<token_t> lexer_t::scan_token()
 {
-  using enum token::type_t;
+  using enum token_t::type_t;
 
   if (at_end_p())
     return {{pos, eof, ""}};
@@ -163,6 +163,7 @@ std::optional<token> lexer_t::scan_token()
   case '&': return {{pos, ampersand, lexeme()}};
   case '|': return {{pos, bar, lexeme()}};
   case '^': return {{pos, carot, lexeme()}};
+  case '=': return {{pos, equal, lexeme()}};
   case '<':
     if (match('<')) return {{pos, left_shift, lexeme()}};
     break;

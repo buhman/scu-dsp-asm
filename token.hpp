@@ -16,8 +16,9 @@ struct token_pos_t {
   int col;
 };
 
-template <typename N>
 struct token_t {
+  using num_type = num_t;
+
   enum type_t {
     left_paren,
     right_paren,
@@ -86,7 +87,7 @@ struct token_t {
     eof,
   };
 
-  using literal_t = std::variant<std::monostate, N>;
+  using literal_t = std::variant<std::monostate, num_type>;
 
   const token_pos_t pos;
   const type_t type;
@@ -95,7 +96,7 @@ struct token_t {
 
   token_t() = delete;
 
-  constexpr token_t(token_pos_t pos, type_t type, const std::string_view lexeme, N number)
+  constexpr token_t(token_pos_t pos, type_t type, const std::string_view lexeme, num_type number)
     : pos(pos), type(type), lexeme(lexeme), literal(number)
   { }
 
@@ -103,7 +104,7 @@ struct token_t {
     : pos(pos), type(type), lexeme(lexeme), literal()
   { }
 
-  friend std::ostream& operator<<(std::ostream& os, const enum token_t<N>::type_t type)
+  friend std::ostream& operator<<(std::ostream& os, const enum token_t::type_t type)
   {
     switch (type) {
     case left_paren   : return os << "LEFT_PAREN";
@@ -179,7 +180,7 @@ struct token_t {
   {
     os << token.type << ' ' << token.lexeme;
 
-    if (auto* v = std::get_if<N>(&token.literal)) {
+    if (auto* v = std::get_if<num_type>(&token.literal)) {
       os << '/' << *v;
     } else { // std::monostate
     }
@@ -188,7 +189,5 @@ struct token_t {
   }
 
 };
-
-using token = dsp::token_t<num_t>;
 
 }

@@ -19,7 +19,7 @@ struct lexer_t {
     : source(source), start_ix(0), current_ix(0), pos{ .line = 1, .col = 0 }
   { }
 
-  std::optional<token> scan_token();
+  std::optional<token_t> scan_token();
 
 private:
   bool at_end_p();
@@ -33,9 +33,9 @@ private:
   const std::string_view lexeme();
 
   template <typename T>
-  token _number();
+  token_t _number();
 
-  token _identifier();
+  token_t _identifier();
 };
 
 }

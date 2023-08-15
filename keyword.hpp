@@ -5,7 +5,7 @@ namespace dsp {
 
 struct keyword {
 
-inline static constexpr std::optional<enum token::type_t>
+inline static constexpr std::optional<enum token_t::type_t>
 find(const std::string_view s)
 {
   if (s.length() == 0) { return {}; }
@@ -23,15 +23,15 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'H': [[fallthrough]];
           case 'h':
-            if (ix == s.length()) return { token::type_t::_alh };
+            if (ix == s.length()) return { token_t::type_t::_alh };
             break;
           case 'L': [[fallthrough]];
           case 'l':
-            if (ix == s.length()) return { token::type_t::_all };
+            if (ix == s.length()) return { token_t::type_t::_all };
             break;
           case 'U': [[fallthrough]];
           case 'u':
-            if (ix == s.length()) return { token::type_t::_alu };
+            if (ix == s.length()) return { token_t::type_t::_alu };
             break;
           }
         }
@@ -42,7 +42,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'D': [[fallthrough]];
           case 'd':
-            if (ix == s.length()) return { token::type_t::_and };
+            if (ix == s.length()) return { token_t::type_t::_and };
             break;
           }
         }
@@ -53,10 +53,10 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'D': [[fallthrough]];
           case 'd':
-            if (ix == s.length()) return { token::type_t::_add };
+            if (ix == s.length()) return { token_t::type_t::_add };
             break;
           case '2':
-            if (ix == s.length()) return { token::type_t::_ad2 };
+            if (ix == s.length()) return { token_t::type_t::_ad2 };
             break;
           }
         }
@@ -69,32 +69,32 @@ find(const std::string_view s)
     if (ix < s.length()) {
       switch (s[ix++]) {
       case '0':
-        if (ix == s.length()) return { token::type_t::_m0 };
+        if (ix == s.length()) return { token_t::type_t::_m0 };
         break;
       case '1':
-        if (ix == s.length()) return { token::type_t::_m1 };
+        if (ix == s.length()) return { token_t::type_t::_m1 };
         break;
       case '2':
-        if (ix == s.length()) return { token::type_t::_m2 };
+        if (ix == s.length()) return { token_t::type_t::_m2 };
         break;
       case '3':
-        if (ix == s.length()) return { token::type_t::_m3 };
+        if (ix == s.length()) return { token_t::type_t::_m3 };
         break;
       case 'C': [[fallthrough]];
       case 'c':
         if (ix < s.length()) {
           switch (s[ix++]) {
           case '0':
-            if (ix == s.length()) return { token::type_t::_mc0 };
+            if (ix == s.length()) return { token_t::type_t::_mc0 };
             break;
           case '1':
-            if (ix == s.length()) return { token::type_t::_mc1 };
+            if (ix == s.length()) return { token_t::type_t::_mc1 };
             break;
           case '2':
-            if (ix == s.length()) return { token::type_t::_mc2 };
+            if (ix == s.length()) return { token_t::type_t::_mc2 };
             break;
           case '3':
-            if (ix == s.length()) return { token::type_t::_mc3 };
+            if (ix == s.length()) return { token_t::type_t::_mc3 };
             break;
           }
         }
@@ -105,7 +105,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'L': [[fallthrough]];
           case 'l':
-            if (ix == s.length()) return { token::type_t::_mul };
+            if (ix == s.length()) return { token_t::type_t::_mul };
             break;
           }
         }
@@ -116,7 +116,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'V': [[fallthrough]];
           case 'v':
-            if (ix == s.length()) return { token::type_t::_mov };
+            if (ix == s.length()) return { token_t::type_t::_mov };
             break;
           }
         }
@@ -127,7 +127,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'I': [[fallthrough]];
           case 'i':
-            if (ix == s.length()) return { token::type_t::_mvi };
+            if (ix == s.length()) return { token_t::type_t::_mvi };
             break;
           }
         }
@@ -145,7 +145,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'P': [[fallthrough]];
           case 'p':
-            if (ix == s.length()) return { token::type_t::_nop };
+            if (ix == s.length()) return { token_t::type_t::_nop };
             break;
           }
         }
@@ -159,12 +159,12 @@ find(const std::string_view s)
       switch (s[ix++]) {
       case 'R': [[fallthrough]];
       case 'r':
-        if (ix == s.length()) return { token::type_t::_or };
+        if (ix == s.length()) return { token_t::type_t::_or };
         else {
           switch (s[ix++]) {
           case 'G': [[fallthrough]];
           case 'g':
-            if (ix == s.length()) return { token::type_t::_org };
+            if (ix == s.length()) return { token_t::type_t::_org };
             break;
           }
         }
@@ -182,7 +182,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'R': [[fallthrough]];
           case 'r':
-            if (ix == s.length()) return { token::type_t::_xor };
+            if (ix == s.length()) return { token_t::type_t::_xor };
             break;
           }
         }
@@ -200,18 +200,18 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'B': [[fallthrough]];
           case 'b':
-            if (ix == s.length()) return { token::type_t::_sub };
+            if (ix == s.length()) return { token_t::type_t::_sub };
             break;
           }
         }
         break;
       case 'R': [[fallthrough]];
       case 'r':
-        if (ix == s.length()) return { token::type_t::_sr };
+        if (ix == s.length()) return { token_t::type_t::_sr };
         break;
       case 'L': [[fallthrough]];
       case 'l':
-        if (ix == s.length()) return { token::type_t::_sl };
+        if (ix == s.length()) return { token_t::type_t::_sl };
         break;
       }
     }
@@ -222,15 +222,15 @@ find(const std::string_view s)
       switch (s[ix++]) {
       case 'R': [[fallthrough]];
       case 'r':
-        if (ix == s.length()) return { token::type_t::_rr };
+        if (ix == s.length()) return { token_t::type_t::_rr };
         break;
       case 'L': [[fallthrough]];
       case 'l':
-        if (ix == s.length()) return { token::type_t::_rl };
+        if (ix == s.length()) return { token_t::type_t::_rl };
         else {
           switch (s[ix++]) {
           case '8':
-            if (ix == s.length()) return { token::type_t::_rl8 };
+            if (ix == s.length()) return { token_t::type_t::_rl8 };
             break;
           }
         }
@@ -248,7 +248,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'R': [[fallthrough]];
           case 'r':
-            if (ix == s.length()) return { token::type_t::_clr };
+            if (ix == s.length()) return { token_t::type_t::_clr };
             break;
           }
         }
@@ -266,12 +266,12 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'A': [[fallthrough]];
           case 'a':
-            if (ix == s.length()) return { token::type_t::_dma };
+            if (ix == s.length()) return { token_t::type_t::_dma };
             else {
               switch (s[ix++]) {
               case 'H': [[fallthrough]];
               case 'h':
-                if (ix == s.length()) return { token::type_t::_dmah };
+                if (ix == s.length()) return { token_t::type_t::_dmah };
                 break;
               }
             }
@@ -292,7 +292,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'P': [[fallthrough]];
           case 'p':
-            if (ix == s.length()) return { token::type_t::_jmp };
+            if (ix == s.length()) return { token_t::type_t::_jmp };
             break;
           }
         }
@@ -310,7 +310,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'M': [[fallthrough]];
           case 'm':
-            if (ix == s.length()) return { token::type_t::_btm };
+            if (ix == s.length()) return { token_t::type_t::_btm };
             break;
           }
         }
@@ -328,7 +328,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'S': [[fallthrough]];
           case 's':
-            if (ix == s.length()) return { token::type_t::_lps };
+            if (ix == s.length()) return { token_t::type_t::_lps };
             break;
           }
         }
@@ -346,16 +346,16 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'D': [[fallthrough]];
           case 'd':
-            if (ix == s.length()) return { token::type_t::_end };
+            if (ix == s.length()) return { token_t::type_t::_end };
             else {
               switch (s[ix++]) {
               case 'I': [[fallthrough]];
               case 'i':
-                if (ix == s.length()) return { token::type_t::_endi };
+                if (ix == s.length()) return { token_t::type_t::_endi };
                 break;
               case 'S': [[fallthrough]];
               case 's':
-                if (ix == s.length()) return { token::type_t::_ends };
+                if (ix == s.length()) return { token_t::type_t::_ends };
                 break;
               }
             }
@@ -369,7 +369,7 @@ find(const std::string_view s)
           switch (s[ix++]) {
           case 'U': [[fallthrough]];
           case 'u':
-            if (ix == s.length()) return { token::type_t::_equ };
+            if (ix == s.length()) return { token_t::type_t::_equ };
             break;
           }
         }

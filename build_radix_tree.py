@@ -25,7 +25,7 @@ def print_switch(d, level=0):
             p(inden0 + f"case '{key.upper()}': [[fallthrough]];")
         p(inden0 + f"case '{key.lower()}':")
         if terminal is not None:
-            p(inden1 + f"if (ix == s.length()) return {{ token::type_t::_{terminal} }};")
+            p(inden1 + f"if (ix == s.length()) return {{ token_t::type_t::_{terminal} }};")
             if children:
                 p(inden1 + "else {")
         else:
@@ -47,7 +47,7 @@ def print_keyword_func(root):
     p()
     p("struct keyword {")
     p()
-    p("inline static constexpr std::optional<enum token::type_t>")
+    p("inline static constexpr std::optional<enum token_t::type_t>")
     p("find(const std::string_view s)")
     p("{")
     p(inden1 + "if (s.length() == 0) { return {}; }")

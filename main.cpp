@@ -4,11 +4,22 @@
 
 #include "lexer.hpp"
 #include "token.hpp"
+#include "ast.hpp"
 
 namespace dsp {
 
 bool had_error = false;
 
+}
+
+static void print()
+{
+  dsp::literal_t l(56);
+  std::string_view s("asdf");
+  dsp::token_t t({0, 0}, dsp::token_t::identifier, s);
+  dsp::assign_t a(t, l);
+  dsp::ast_printer_t p(std::cout);
+  p.visit(&a);
 }
 
 static void run(std::string source)
@@ -17,9 +28,9 @@ static void run(std::string source)
 
   std::string_view buf {source};
   lexer_t lexer {buf};
-  while (std::optional<token> token_o = lexer.scan_token()) {
+  while (std::optional<token_t> token_o = lexer.scan_token()) {
     std::cout << *token_o << std::endl;
-    if (token_o->type == token::type_t::eof) {
+    if (token_o->type == token_t::type_t::eof) {
       break;
     }
   }
@@ -56,6 +67,7 @@ static int run_file(char const * const filename)
 
 int main(const int argc, char const * const argv[])
 {
+  print();
   switch (argc) {
   case 1: run_prompt(); return dsp::had_error;
   case 2: return run_file(argv[1]);
