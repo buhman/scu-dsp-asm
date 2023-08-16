@@ -143,68 +143,74 @@ std::optional<token_t> lexer_t::scan_token()
 {
   using enum token_t::type_t;
 
-  if (at_end_p())
-    return {{pos, eof, ""}};
+  while (true) {
+    if (at_end_p())
+      return {{pos, eof, ""}};
 
-  start_ix = current_ix;
+    start_ix = current_ix;
 
-  const char c = advance();
-  switch (c) {
-  case '(': return {{pos, left_paren, lexeme()}};
-  case ')': return {{pos, right_paren, lexeme()}};
-  case ',': return {{pos, comma, lexeme()}};
-  case '.': return {{pos, dot, lexeme()}};
-  case '+': return {{pos, plus, lexeme()}};
-  case '-': return {{pos, minus, lexeme()}};
-  case '*': return {{pos, star, lexeme()}};
-  case '/': return {{pos, slash, lexeme()}};
-  case '%': return {{pos, percent, lexeme()}};
-  case '~': return {{pos, tilde, lexeme()}};
-  case '&': return {{pos, ampersand, lexeme()}};
-  case '|': return {{pos, bar, lexeme()}};
-  case '^': return {{pos, carot, lexeme()}};
-  case '=': return {{pos, equal, lexeme()}};
-  case '<':
-    if (match('<')) return {{pos, left_shift, lexeme()}};
-    break;
-  case '>':
-    if (match('>')) return {{pos, right_shift, lexeme()}};
-    break;
-  case ';':
-    while (!at_end_p() && peek() != '\n') advance();
-    break;
-  case ' ':
-  case '\r':
-  case '\t':
-    break;
-  case '\n':
-    pos.line++;
-    pos.col = 0;
-    break;
-  case '$':
-    if (hex_t::pred(peek())) {
-      start_ix += 1;
-      return {_number<hex_t>()};
-    }
-    [[fallthrough]];
-  case '0':
-    if (match('x')) {
-      if (hex_t::pred(peek())) {
-        start_ix += 2;
-        return {_number<hex_t>()};
+    const char c = advance();
+    switch (c) {
+    case '(': return {{pos, left_paren, lexeme()}};
+    case ')': return {{pos, right_paren, lexeme()}};
+    case ',': return {{pos, comma, lexeme()}};
+    case '.': return {{pos, dot, lexeme()}};
+    case '+': return {{pos, plus, lexeme()}};
+    case '-': return {{pos, minus, lexeme()}};
+    case '*': return {{pos, star, lexeme()}};
+    case '/': return {{pos, slash, lexeme()}};
+    case '%': return {{pos, percent, lexeme()}};
+    case '~': return {{pos, tilde, lexeme()}};
+    case '&': return {{pos, ampersand, lexeme()}};
+    case '|': return {{pos, bar, lexeme()}};
+    case '^': return {{pos, carot, lexeme()}};
+    case '=': return {{pos, equal, lexeme()}};
+    case '<':
+      if (match('<')) return {{pos, left_shift, lexeme()}};
+      break;
+    case '>':
+      if (match('>')) return {{pos, right_shift, lexeme()}};
+      break;
+    case ';':
+      while (!at_end_p() && peek() != '\n') advance();
+      break;
+    case ' ':
+    case '\r':
+    case '\t':
+      break;
+    case '\n':
+      {
+	token_pos_t tmp = pos;
+	pos.line++;
+	pos.col = 0;
+	return {{tmp, eol, lexeme()}};
       }
+      break;
+    case '$':
+      if (hex_t::pred(peek())) {
+	start_ix += 1;
+	return {_number<hex_t>()};
+      }
+      [[fallthrough]];
+    case '0':
+      if (match('x')) {
+	if (hex_t::pred(peek())) {
+	  start_ix += 2;
+	  return {_number<hex_t>()};
+	}
+      }
+      [[fallthrough]];
+    default:
+      if (dec_t::pred(c)) {
+	return {_number<dec_t>()};
+      } else if (alpha_p(c)) {
+	return {_identifier()};
+      } else {
+	error(pos.line, pos.col - 1, "Unexpected character.");
+	return {};
+      }
+      break;
     }
-    [[fallthrough]];
-  default:
-    if (dec_t::pred(c)) {
-      return {_number<dec_t>()};
-    } else if (alpha_p(c)) {
-      return {_identifier()};
-    } else {
-      error(pos.line, pos.col - 1, "Unexpected character.");
-      return {};
-    }
-    break;
   }
   __builtin_unreachable();
 }

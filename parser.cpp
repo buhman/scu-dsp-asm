@@ -159,4 +159,15 @@ expr_t * parser_t::primary()
   throw error(peek(), "expected expression");
 }
 
+/*
+void parser_t::synchronize()
+{
+  advance();
+  while (!at_end_p()) {
+    if (previous().type == eol) return;
+    advance();
+  }
+}
+*/
+
 }

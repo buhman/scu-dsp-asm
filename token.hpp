@@ -85,6 +85,7 @@ struct token_t {
     _ends,
 
     eof,
+    eol,
   };
 
   using literal_t = std::variant<std::monostate, num_type>;
@@ -172,6 +173,7 @@ struct token_t {
     case _ends        : return os << "ENDS";
 
     case eof          : return os << "EOF";
+    case eol          : return os << "EOL";
     }
     __builtin_unreachable();
   }
