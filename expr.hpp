@@ -52,11 +52,11 @@ struct literal_t : expr_accept_t<literal_t>
 
 struct unary_t : expr_accept_t<unary_t>
 {
-  unary_t(token_t oper, expr_t * expr)
-    : oper(oper), expr(expr) {}
+  unary_t(token_t oper, expr_t * right)
+    : oper(oper), right(right) {}
 
   const token_t oper;
-  const expr_t * expr;
+  const expr_t * right;
 };
 
 }
