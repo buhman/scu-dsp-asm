@@ -2,6 +2,7 @@
 
 #include <string_view>
 #include <optional>
+#include <vector>
 
 #include "token.hpp"
 
@@ -19,7 +20,8 @@ struct lexer_t {
     : source(source), start_ix(0), current_ix(0), pos{ .line = 1, .col = 0 }
   { }
 
-  std::optional<token_t> scan_token();
+  std::optional<token_t> lex_token();
+  std::vector<token_t> lex_tokens();
 
 private:
   bool at_end_p();

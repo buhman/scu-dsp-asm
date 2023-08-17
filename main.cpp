@@ -5,6 +5,7 @@
 #include "lexer.hpp"
 #include "token.hpp"
 #include "ast.hpp"
+#include "parser.hpp"
 
 namespace dsp {
 
@@ -12,28 +13,18 @@ bool had_error = false;
 
 }
 
-static void print()
-{
-  dsp::literal_t l(56);
-  std::string_view s("-");
-  dsp::token_t t({0, 0}, dsp::token_t::minus, s);
-  dsp::unary_t a(t, &l);
-  dsp::ast_printer_t p(std::cout);
-  p.visit(&a);
-}
-
 static void run(std::string source)
 {
   using namespace dsp;
 
-  std::string_view buf {source};
-  lexer_t lexer {buf};
-  while (std::optional<token_t> token_o = lexer.scan_token()) {
-    std::cout << *token_o << std::endl;
-    if (token_o->type == token_t::type_t::eof) {
-      break;
-    }
-  }
+  std::string_view buf(source);
+  lexer_t lexer(buf);
+  std::vector<token_t> tokens = lexer.lex_tokens();
+  parser_t parser(tokens);
+  expr_t * expr = parser.expression();
+  dsp::ast_printer_t p(std::cout);
+  expr->accept(&p);
+  std::cout << std::endl << std::flush;
 }
 
 static void run_prompt()
@@ -67,7 +58,6 @@ static int run_file(char const * const filename)
 
 int main(const int argc, char const * const argv[])
 {
-  print();
   switch (argc) {
   case 1: run_prompt(); return dsp::had_error;
   case 2: return run_file(argv[1]);

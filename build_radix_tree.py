@@ -1,3 +1,5 @@
+import sys
+
 def build_radix_tree(ops: list[str]) -> dict:
     root = dict()
     for op in ops:
@@ -62,38 +64,123 @@ def print_keyword_func(root):
     p()
     p("}")
 
-from pprint import pprint
-d = build_radix_tree([
-    "alh",
-    "all",
-    "alu",
-    "m0",  "m1",  "m2", "m3",
-    "mc0", "mc1", "mc2", "mc3",
-    "mul",
-    "nop",
-    "and",
-    "or",
-    "xor",
-    "add",
-    "sub",
+
+alu_keywords = [
     "ad2",
-    "sr",
-    "rr",
-    "sl",
+    "add",
+    "and",
+    "nop",
+    "or",
     "rl",
     "rl8",
+    "rr",
+    "sl",
+    "sr",
+    "sub",
+    "xor",
+]
+
+x_bus_keywords = [
+    "mov", # Mn, MCn
+    "x",
+    "p",
+    "mul",
+]
+
+mn = ["m0", "m1", "m2", "m3"]
+mcn = ["mc0", "mc1", "mc2", "mc3"]
+
+y_bus_keywords = [
+    "mov", # Mn, MCn
     "clr",
-    "mov",
+    "y",
+    "a",
+    "alu",
+]
+
+d1_bus_keywords = [
+    "mov", # MCn
+    "alh",
+    "all",
+]
+
+reg_keywords = [
+    "rx",
+    "pl",
+    "ra0",
+    "wa0",
+    "lop",
+    "top",
+]
+
+cond_keywords = [
+    "z",
+    "nz",
+    "s",
+    "ns",
+    "c",
+    "nc",
+    "t0",
+    "nt0",
+    "zs",
+    "nzs",
+]
+
+move_immediate_keywords = [
     "mvi",
+]
+
+dma_keywords = [
     "dma",
     "dmah",
+    "d0",
+    "prg",
+]
+
+jmp_keywords = [
     "jmp",
+]
+
+loop_keywords = [
     "btm",
     "lps",
+]
+
+halt_keywords = [
     "end",
     "endi",
+]
+
+directive_keywords = [
     "equ",
     "org",
-    "ends",
-])
-print_keyword_func(d)
+]
+
+keywords = sorted(set([
+    *alu_keywords,
+    *x_bus_keywords,
+    *mn,
+    *mcn,
+    *y_bus_keywords,
+    *d1_bus_keywords,
+    *reg_keywords,
+    *cond_keywords,
+    *move_immediate_keywords,
+    *dma_keywords,
+    *jmp_keywords,
+    *loop_keywords,
+    *halt_keywords,
+    *directive_keywords,
+]))
+
+if sys.argv[1] == 'hpp':
+    d = build_radix_tree(keywords)
+    print_keyword_func(d)
+elif sys.argv[1] == 'enum_inc':
+    for k in keywords:
+        print(f"_{k},")
+elif sys.argv[1] == 'case_inc':
+    for k in keywords:
+        print(f'case _{k.ljust(4, " ")}       : return os << "{k.upper()}";')
+else:
+    assert False, sys.argv

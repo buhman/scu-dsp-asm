@@ -7,6 +7,7 @@ CXX = $(TARGET)clang++
 SRC = main.cpp
 SRC += lexer.cpp
 SRC += ast.cpp
+SRC += parser.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 DEP = $(patsubst %.cpp,%.d,$(SRC))
 

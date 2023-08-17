@@ -139,7 +139,7 @@ token_t lexer_t::_identifier()
   else         return {pos, token_t::identifier, lexeme()};
 }
 
-std::optional<token_t> lexer_t::scan_token()
+std::optional<token_t> lexer_t::lex_token()
 {
   using enum token_t::type_t;
 
@@ -213,6 +213,19 @@ std::optional<token_t> lexer_t::scan_token()
     }
   }
   __builtin_unreachable();
+}
+
+std::vector<token_t> lexer_t::lex_tokens()
+{
+  std::vector<token_t> tokens;
+
+  while (true) {
+    std::optional<token_t> token_o = lex_token();
+    if (!token_o) continue;
+    tokens.push_back(*token_o);
+    if (token_o->type == token_t::eof) break;
+  }
+  return tokens;
 }
 
 }

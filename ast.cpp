@@ -4,7 +4,7 @@ namespace dsp {
 
 void ast_printer_t::visit(const unary_t * unary) const
 {
-  parenthesize((unary->oper).lexeme, unary->expr);
+  parenthesize((unary->oper).lexeme, unary->right);
 }
 
 void ast_printer_t::visit(const binary_t * binary) const
