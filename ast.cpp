@@ -249,4 +249,14 @@ void ast_printer_t::visit(const nop::nop_t * nop) const
   parenthesize("nop");
 }
 
+void ast_printer_t::visit(const assign_t * assign) const
+{
+  parenthesize("assign", assign->name.lexeme, assign->value);
+}
+
+void ast_printer_t::visit(const label_t * label) const
+{
+  parenthesize("label", label->name.lexeme);
+}
+
 }

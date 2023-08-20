@@ -38,12 +38,15 @@ struct token_t {
     carot,
     left_shift,
     right_shift,
-    equal,
 
     // literals
     identifier,
     string,
     number,
+
+    // assign and label
+    equal,
+    colon,
 
     // ends
     eof,
@@ -79,7 +82,7 @@ struct token_t {
     case comma        : return os << "COMMA";
     case dot          : return os << "DOT";
 
-      // operators
+    // operators
     case plus         : return os << "PLUS";
     case minus        : return os << "MINUS";
     case star         : return os << "STAR";
@@ -91,12 +94,15 @@ struct token_t {
     case carot        : return os << "CAROT";
     case left_shift   : return os << "LEFT_SHIFT";
     case right_shift  : return os << "RIGHT_SHIFT";
-    case equal        : return os << "EQUAL";
 
-      // literals
+    // literals
     case identifier   : return os << "IDENTIFIER";
     case string       : return os << "STRING";
     case number       : return os << "NUMBER";
+
+    // assign and label
+    case equal        : return os << "EQUAL";
+    case colon        : return os << "COLON";
 
     // keywords
     #include "keyword.case_inc"

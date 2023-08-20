@@ -64,8 +64,7 @@ struct parser_t
   std::optional<stmt_t *> loop();
   std::optional<stmt_t *> end();
   std::optional<stmt_t *> instruction();
-  std::optional<stmt_t *> instruction_statement();
-  stmt_t * statement();
+  std::optional<stmt_t *> statement();
 };
 
 }

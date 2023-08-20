@@ -56,4 +56,7 @@ namespace nop {
 struct nop_t;
 }
 
+struct assign_t;
+struct label_t;
+
 }

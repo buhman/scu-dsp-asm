@@ -22,7 +22,7 @@ static void run(std::string source)
   lexer_t lexer(buf);
   std::vector<token_t> tokens = lexer.lex_tokens();
   parser_t parser(tokens);
-  std::optional<stmt_t *> stmt_o = parser.instruction();
+  std::optional<stmt_t *> stmt_o = parser.statement();
   if (stmt_o) {
     dsp::ast_printer_t p(std::cout);
     (*stmt_o)->accept(&p);

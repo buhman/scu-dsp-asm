@@ -258,7 +258,6 @@ struct nop_t : stmt_accept_t<nop_t>
 
 }
 
-/*
 struct assign_t : stmt_accept_t<assign_t>
 {
   assign_t(token_t name, expr_t * value)
@@ -267,6 +266,13 @@ struct assign_t : stmt_accept_t<assign_t>
   const token_t name;
   const expr_t * value;
 };
-*/
+
+struct label_t : stmt_accept_t<label_t>
+{
+  label_t(token_t name)
+    : name(name) {}
+
+  const token_t name;
+};
 
 } // dsp

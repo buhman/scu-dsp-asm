@@ -52,7 +52,7 @@ const token_t& parser_t::advance()
 
 bool parser_t::check(enum token_t::type_t token_type)
 {
-  if (at_end_p()) return false;
+  if (at_end_p() && token_type != eof) return false;
   return peek().type == token_type;
 }
 
@@ -567,17 +567,34 @@ std::optional<stmt_t *> parser_t::instruction()
   else                           return {};
 }
 
-std::optional<stmt_t *> parser_t::instruction_statement()
+std::optional<stmt_t *> parser_t::statement()
 {
-  // label
-  // instruction
-  // newline
-  return {};
-}
-
-stmt_t * parser_t::statement()
-{
-  return nullptr;
+  if (check(eol)) {
+    while (!at_end_p() && check(eol)) advance();
+    return statement();
+  } else if (check(eof)) {
+    return {};
+  } else if (match(identifier)) {
+    token_t name = previous();
+    if (match(colon)) {
+      return {new label_t(name)};
+    } else if (match(equal) || match(_equ)) {
+      expr_t * value = expression();
+      if (check(eol) || check(eof))
+	return {new assign_t(name, value)};
+      else
+      	throw error(peek(), "expected eol or eof after assignment");
+    } else {
+      throw error(peek(), "expected assignment or label");
+    }
+  } else if (auto ins_o = instruction()) {
+    if (check(eol) || check(eof))
+      return ins_o;
+    else
+      throw error(peek(), "expected eol or eof after instruction");
+  } else {
+    throw error(peek(), "expected statement");
+  }
 }
 
 }

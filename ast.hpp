@@ -53,6 +53,8 @@ struct ast_printer_t : visitor_t<void>
 
   void visit(const nop::nop_t * nop) const;
 
+  void visit(const assign_t * assign) const;
+  void visit(const label_t * label) const;
 
   void parenthesize(const std::string_view s, const expr_t * a) const;
   void parenthesize(const std::string_view s1, const std::string_view s2, const expr_t * a) const;

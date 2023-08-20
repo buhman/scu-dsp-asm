@@ -165,6 +165,7 @@ std::optional<token_t> lexer_t::lex_token()
     case '|': return {{pos, bar, lexeme()}};
     case '^': return {{pos, carot, lexeme()}};
     case '=': return {{pos, equal, lexeme()}};
+    case ':': return {{pos, colon, lexeme()}};
     case '<':
       if (match('<')) return {{pos, left_shift, lexeme()}};
       break;
@@ -206,7 +207,7 @@ std::optional<token_t> lexer_t::lex_token()
       } else if (alpha_p(c)) {
 	return {_identifier()};
       } else {
-	error(pos.line, pos.col - 1, "Unexpected character.");
+	error(pos.line, pos.col - 1, "unexpected character");
 	return {};
       }
       break;

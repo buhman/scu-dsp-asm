@@ -43,6 +43,9 @@ struct visitor_t
   virtual T visit(const end::endi_t * endi) const = 0;
 
   virtual T visit(const nop::nop_t * nop) const = 0;
+
+  virtual T visit(const assign_t * assign) const = 0;
+  virtual T visit(const label_t * label) const = 0;
 };
 
 }
