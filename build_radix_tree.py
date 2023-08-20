@@ -111,6 +111,10 @@ reg_keywords = [
     "wa0",
     "lop",
     "top",
+    "ct0",
+    "ct1",
+    "ct2",
+    "ct3",
 ]
 
 cond_keywords = [

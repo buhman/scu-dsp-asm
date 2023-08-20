@@ -1,9 +1,11 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <optional>
 
 #include "token.hpp"
 #include "expr.hpp"
+#include "stmt.hpp"
 
 namespace dsp {
 
@@ -45,6 +47,14 @@ struct parser_t
   expr_t * orl();
   expr_t * primary();
 
+  std::optional<op::op_t *> alu();
+  bool xyd1_src();
+  std::optional<op::d1_dest_t> d1_dest();
+  std::optional<op::op_t *> xyd1_bus();
+  std::optional<stmt_t *> op();
+  std::optional<stmt_t *> instruction();
+  std::optional<stmt_t *> instruction_statement();
+  stmt_t * statement();
 };
 
 }

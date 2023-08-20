@@ -38,4 +38,11 @@ void ast_printer_t::parenthesize(const std::string_view s, const expr_t * a, con
   os << ')';
 }
 
+// instructions
+
+void ast_printer_t::visit(const op::alu_t * alu) const
+{
+  (void)alu;
+}
+
 }

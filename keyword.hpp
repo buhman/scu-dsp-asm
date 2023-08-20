@@ -99,6 +99,25 @@ find(const std::string_view s)
           }
         }
         break;
+      case 'T': [[fallthrough]];
+      case 't':
+        if (ix < s.length()) {
+          switch (s[ix++]) {
+          case '0':
+            if (ix == s.length()) return { token_t::type_t::_ct0 };
+            break;
+          case '1':
+            if (ix == s.length()) return { token_t::type_t::_ct1 };
+            break;
+          case '2':
+            if (ix == s.length()) return { token_t::type_t::_ct2 };
+            break;
+          case '3':
+            if (ix == s.length()) return { token_t::type_t::_ct3 };
+            break;
+          }
+        }
+        break;
       }
     }
     break;

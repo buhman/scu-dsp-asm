@@ -4,7 +4,7 @@ xy_src → "mc0" | "mc1" | "mc2" | "mc3"
        | "m0"  | "m1"  | "m2"  | "m3"
 
 mov_ram_x → "mov" xy_src  "," "x"
-mov_mul_p → "mov" "mul"    "," "p"
+mov_mul_p → "mov" "mul"   "," "p"
 mov_ram_p → "mov" xy_src  "," "p"
 
 x_bus → mov_ram_x | mov_mul_p | mov_ram_p
@@ -25,8 +25,8 @@ d1_src → "mc0" | "mc1" | "mc2" | "mc3"
        | "m0"  | "m1"  | "m2"  | "m3"
        | "alh" | "all"
 
-mov_imm_d1 → "mov" simm8  d1_dest
-mov_ram_d1 → "mov" d1_src d1_dest
+mov_imm_d1 → "mov" simm8  "," d1_dest
+mov_ram_d1 → "mov" d1_src "," d1_dest
 
 d1_bus → mov_imm_d1 → mov_ram_d1
 
@@ -94,7 +94,7 @@ assignment_statement → identifier "=" expression "\n"
 
 label → identifier ":"
 
-instruction_statement → label? instruction "\n"
+instruction_statement → label? instruction? "\n"
 
 statement → assignment_statement
           | instruction_statement
