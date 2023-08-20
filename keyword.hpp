@@ -137,9 +137,93 @@ find(const std::string_view s)
             if (ix == s.length()) return { token_t::type_t::_dma };
             else {
               switch (s[ix++]) {
+              case '0':
+                if (ix == s.length()) return { token_t::type_t::_dma0 };
+                break;
+              case '1':
+                if (ix == s.length()) return { token_t::type_t::_dma1 };
+                else {
+                  switch (s[ix++]) {
+                  case '6':
+                    if (ix == s.length()) return { token_t::type_t::_dma16 };
+                    break;
+                  }
+                }
+                break;
+              case '2':
+                if (ix == s.length()) return { token_t::type_t::_dma2 };
+                break;
+              case '3':
+                if (ix < s.length()) {
+                  switch (s[ix++]) {
+                  case '2':
+                    if (ix == s.length()) return { token_t::type_t::_dma32 };
+                    break;
+                  }
+                }
+                break;
+              case '4':
+                if (ix == s.length()) return { token_t::type_t::_dma4 };
+                break;
+              case '6':
+                if (ix < s.length()) {
+                  switch (s[ix++]) {
+                  case '4':
+                    if (ix == s.length()) return { token_t::type_t::_dma64 };
+                    break;
+                  }
+                }
+                break;
+              case '8':
+                if (ix == s.length()) return { token_t::type_t::_dma8 };
+                break;
               case 'H': [[fallthrough]];
               case 'h':
                 if (ix == s.length()) return { token_t::type_t::_dmah };
+                else {
+                  switch (s[ix++]) {
+                  case '0':
+                    if (ix == s.length()) return { token_t::type_t::_dmah0 };
+                    break;
+                  case '1':
+                    if (ix == s.length()) return { token_t::type_t::_dmah1 };
+                    else {
+                      switch (s[ix++]) {
+                      case '6':
+                        if (ix == s.length()) return { token_t::type_t::_dmah16 };
+                        break;
+                      }
+                    }
+                    break;
+                  case '2':
+                    if (ix == s.length()) return { token_t::type_t::_dmah2 };
+                    break;
+                  case '3':
+                    if (ix < s.length()) {
+                      switch (s[ix++]) {
+                      case '2':
+                        if (ix == s.length()) return { token_t::type_t::_dmah32 };
+                        break;
+                      }
+                    }
+                    break;
+                  case '4':
+                    if (ix == s.length()) return { token_t::type_t::_dmah4 };
+                    break;
+                  case '6':
+                    if (ix < s.length()) {
+                      switch (s[ix++]) {
+                      case '4':
+                        if (ix == s.length()) return { token_t::type_t::_dmah64 };
+                        break;
+                      }
+                    }
+                    break;
+                  case '8':
+                    if (ix == s.length()) return { token_t::type_t::_dmah8 };
+                    break;
+                  }
+                }
                 break;
               }
             }
@@ -377,6 +461,10 @@ find(const std::string_view s)
     if (ix == s.length()) return { token_t::type_t::_p };
     else {
       switch (s[ix++]) {
+      case 'C': [[fallthrough]];
+      case 'c':
+        if (ix == s.length()) return { token_t::type_t::_pc };
+        break;
       case 'L': [[fallthrough]];
       case 'l':
         if (ix == s.length()) return { token_t::type_t::_pl };

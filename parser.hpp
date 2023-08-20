@@ -29,9 +29,9 @@ struct parser_t
 
   bool at_end_p();
 
-  token_t& previous();
-  token_t& peek();
-  token_t& advance();
+  const token_t& previous();
+  const token_t& peek();
+  const token_t& advance();
   bool check(enum token_t::type_t token_type);
   bool match(enum token_t::type_t token_type);
   template <typename... Targs>
@@ -52,6 +52,16 @@ struct parser_t
   std::optional<op::d1_dest_t> d1_dest();
   std::optional<op::op_t *> xyd1_bus();
   std::optional<stmt_t *> op();
+  load::dest_t load_dest();
+  load::cond_t load_cond();
+  std::optional<stmt_t *> load();
+  dma::src_t dma_src();
+  dma::dst_t dma_dst();
+  std::optional<dma::length_ram_t> dma_length_ram();
+  std::optional<stmt_t *> dma();
+  std::optional<stmt_t *> jump();
+  std::optional<stmt_t *> loop();
+  std::optional<stmt_t *> end();
   std::optional<stmt_t *> instruction();
   std::optional<stmt_t *> instruction_statement();
   stmt_t * statement();

@@ -28,10 +28,10 @@ struct visitor_t
   virtual T visit(const load::mvi_t * mvi) const = 0;
   virtual T visit(const load::mvi_cond_t * mvi_cond) const = 0;
 
-  virtual T visit(const dma::ingress_imm_t * ingress_imm) const = 0;
-  virtual T visit(const dma::egress_imm_t * egress_imm) const = 0;
-  virtual T visit(const dma::ingress_ram_t * ingress_ram) const = 0;
-  virtual T visit(const dma::egress_ram_t * egress_ram) const = 0;
+  virtual T visit(const dma::src_d0_imm_t * src_d0_imm) const = 0;
+  virtual T visit(const dma::d0_dst_imm_t * d0_dst_imm) const = 0;
+  virtual T visit(const dma::src_d0_ram_t * src_d0_ram) const = 0;
+  virtual T visit(const dma::d0_dst_ram_t * d0_dst_ram) const = 0;
 
   virtual T visit(const jump::jmp_t * jmp) const = 0;
   virtual T visit(const jump::jmp_cond_t * jmp_cond) const = 0;
@@ -40,8 +40,9 @@ struct visitor_t
   virtual T visit(const loop::lps_t * lps) const = 0;
 
   virtual T visit(const end::end_t * end) const = 0;
-  virtual T visit(const end::endi_t  * endi) const = 0;
+  virtual T visit(const end::endi_t * endi) const = 0;
 
+  virtual T visit(const nop::nop_t * nop) const = 0;
 };
 
 }

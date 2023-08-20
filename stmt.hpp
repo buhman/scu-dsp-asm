@@ -157,47 +157,48 @@ struct mvi_cond_t : stmt_accept_t<mvi_cond_t>
 
 namespace dma {
 
-struct ingress_imm_t : stmt_accept_t<ingress_imm_t>
+struct src_d0_imm_t : stmt_accept_t<src_d0_imm_t>
 {
-  ingress_imm_t(bool hold, add_mode_t add, ingress_t ingress, simm_t<8> imm)
-    : hold(hold), add(add), ingress(ingress), imm(imm) {}
+  src_d0_imm_t(bool hold, add_mode_t add, src_t src, uimm_t<8> imm)
+    : hold(hold), add(add), src(src), imm(imm) {}
 
   const bool hold;
   const add_mode_t add;
-  const ingress_t ingress;
-  const simm_t<8> imm;
+  const src_t src;
+  const uimm_t<8> imm;
 };
 
-struct egress_imm_t : stmt_accept_t<egress_imm_t>
+struct d0_dst_imm_t : stmt_accept_t<d0_dst_imm_t>
 {
-  egress_imm_t(bool hold, add_mode_t add, egress_t egress, simm_t<8> imm)
-    : hold(hold), add(add), egress(egress), imm(imm) {}
+  d0_dst_imm_t(bool hold, add_mode_t add, dst_t dst, uimm_t<8> imm)
+    : hold(hold), add(add), dst(dst), imm(imm) {}
 
   const bool hold;
   const add_mode_t add;
-  const egress_t egress;
-  const simm_t<8> imm;
+  const dst_t dst;
+  const uimm_t<8> imm;
 };
 
-struct ingress_ram_t : stmt_accept_t<ingress_ram_t>
+struct src_d0_ram_t : stmt_accept_t<src_d0_ram_t>
 {
-  ingress_ram_t(bool hold, add_mode_t add, ingress_t ingress, length_ram_t ram)
-    : hold(hold), add(add), ingress(ingress), ram(ram) {}
+  // from src to d0
+  src_d0_ram_t(bool hold, add_mode_t add, src_t src, length_ram_t ram)
+    : hold(hold), add(add), src(src), ram(ram) {}
 
   const bool hold;
   const add_mode_t add;
-  const ingress_t ingress;
+  const src_t src;
   const length_ram_t ram;
 };
 
-struct egress_ram_t : stmt_accept_t<egress_ram_t>
+struct d0_dst_ram_t : stmt_accept_t<d0_dst_ram_t>
 {
-  egress_ram_t(bool hold, add_mode_t add, egress_t egress, length_ram_t ram)
-    : hold(hold), add(add), egress(egress), ram(ram) {}
+  d0_dst_ram_t(bool hold, add_mode_t add, dst_t dst, length_ram_t ram)
+    : hold(hold), add(add), dst(dst), ram(ram) {}
 
   const bool hold;
   const add_mode_t add;
-  const egress_t egress;
+  const dst_t dst;
   const length_ram_t ram;
 };
 
@@ -248,6 +249,14 @@ struct endi_t : stmt_accept_t<endi_t>
 };
 
 } // end
+
+namespace nop {
+
+struct nop_t : stmt_accept_t<nop_t>
+{
+};
+
+}
 
 /*
 struct assign_t : stmt_accept_t<assign_t>

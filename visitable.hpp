@@ -31,10 +31,10 @@ struct mvi_cond_t;
 }
 
 namespace dma {
-struct ingress_imm_t;
-struct egress_imm_t;
-struct ingress_ram_t;
-struct egress_ram_t;
+struct src_d0_imm_t;
+struct d0_dst_imm_t;
+struct src_d0_ram_t;
+struct d0_dst_ram_t;
 }
 
 namespace jump {
@@ -49,8 +49,11 @@ struct lps_t;
 
 namespace end {
 struct end_t;
-struct endi_t ;
+struct endi_t;
 }
 
+namespace nop {
+struct nop_t;
+}
 
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <optional>
 
 #include "lexer.hpp"
 #include "token.hpp"
@@ -21,9 +22,11 @@ static void run(std::string source)
   lexer_t lexer(buf);
   std::vector<token_t> tokens = lexer.lex_tokens();
   parser_t parser(tokens);
-  expr_t * expr = parser.expression();
-  dsp::ast_printer_t p(std::cout);
-  expr->accept(&p);
+  std::optional<stmt_t *> stmt_o = parser.instruction();
+  if (stmt_o) {
+    dsp::ast_printer_t p(std::cout);
+    (*stmt_o)->accept(&p);
+  }
   std::cout << std::endl << std::flush;
 }
 

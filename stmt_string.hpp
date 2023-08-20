@@ -24,8 +24,8 @@ namespace dma {
 
 extern const std::string hold_mode_string[];
 extern const std::string add_mode_string[];
-extern const std::string ingress_string[];
-extern const std::string egress_string[];
+extern const std::string src_string[];
+extern const std::string dst_string[];
 extern const std::string length_ram_string[];
 
 } // dma

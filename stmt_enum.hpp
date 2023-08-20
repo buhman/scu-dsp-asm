@@ -70,11 +70,11 @@ enum struct add_mode_t {
   _64,
 };
 
-enum struct ingress_t {
+enum struct src_t {
   m0, m1, m2, m3
 };
 
-enum struct egress_t {
+enum struct dst_t {
   m0, m1, m2, m3,
   prg,
 };

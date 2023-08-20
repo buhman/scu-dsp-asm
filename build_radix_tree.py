@@ -115,6 +115,7 @@ reg_keywords = [
     "ct1",
     "ct2",
     "ct3",
+    "pc",
 ]
 
 cond_keywords = [
@@ -134,9 +135,13 @@ move_immediate_keywords = [
     "mvi",
 ]
 
+_dma_add = [0, 1, 2, 4, 8, 16, 32, 64]
+
 dma_keywords = [
     "dma",
     "dmah",
+    *(f"dma{i}"  for i in _dma_add),
+    *(f"dmah{i}" for i in _dma_add),
     "d0",
     "prg",
 ]
@@ -185,6 +190,6 @@ elif sys.argv[1] == 'enum_inc':
         print(f"_{k},")
 elif sys.argv[1] == 'case_inc':
     for k in keywords:
-        print(f'case _{k.ljust(4, " ")}       : return os << "{k.upper()}";')
+        print(f'case _{k.ljust(7, " ")}       : return os << "{k.upper()}";')
 else:
     assert False, sys.argv

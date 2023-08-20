@@ -106,19 +106,19 @@ const std::string add_mode_string[] = {
   [i(add_mode_t::_64)] = "64",
 };
 
-const std::string ingress_string[] = {
-  [i(ingress_t::m0)] = "m0",
-  [i(ingress_t::m1)] = "m1",
-  [i(ingress_t::m2)] = "m2",
-  [i(ingress_t::m3)] = "m3"
+const std::string src_string[] = {
+  [i(src_t::m0)] = "m0",
+  [i(src_t::m1)] = "m1",
+  [i(src_t::m2)] = "m2",
+  [i(src_t::m3)] = "m3"
 };
 
-const std::string egress_string[] = {
-  [i(egress_t::m0 )] = "m0",
-  [i(egress_t::m1 )] = "m1",
-  [i(egress_t::m2 )] = "m2",
-  [i(egress_t::m3 )] = "m3",
-  [i(egress_t::prg)] = "prg",
+const std::string dst_string[] = {
+  [i(dst_t::m0 )] = "m0",
+  [i(dst_t::m1 )] = "m1",
+  [i(dst_t::m2 )] = "m2",
+  [i(dst_t::m3 )] = "m3",
+  [i(dst_t::prg)] = "prg",
 };
 
 const std::string length_ram_string[] = {

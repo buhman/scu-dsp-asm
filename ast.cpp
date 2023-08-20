@@ -15,7 +15,7 @@ void ast_printer_t::visit(const binary_t * binary) const
 
 void ast_printer_t::visit(const grouping_t * grouping) const
 {
-  parenthesize(std::string_view("<grouping>"), grouping->expr);
+  parenthesize("grouping", grouping->expr);
 }
 
 void ast_printer_t::visit(const literal_t * literal) const
@@ -37,18 +37,25 @@ void ast_printer_t::parenthesize(const std::string_view s1, const std::string_vi
   os << ')';
 }
 
+void ast_printer_t::parenthesize(const std::string_view s1, const std::string_view s2, const std::string_view s3, const expr_t * a) const
+{
+  os << '(' << s1 << ' ' << s2 << ' ' << s3 << ' ';
+  a->accept(this);
+  os << ')';
+}
+
 void ast_printer_t::parenthesize(const std::string_view s1, const expr_t * a, const std::string_view s2) const
 {
   os << '(' << s1 << ' ';
   a->accept(this);
-  os << s2 << ')';
+  os << ' ' << s2 << ')';
 }
 
 void ast_printer_t::parenthesize(const std::string_view s1, const expr_t * a, const std::string_view s2, const std::string_view s3) const
 {
   os << '(' << s1 << ' ';
   a->accept(this);
-  os << s2 << ' ' << s3 << ')';
+  os << ' ' << s2 << ' ' << s3 << ')';
 }
 
 void ast_printer_t::parenthesize(const std::string_view s) const
@@ -64,6 +71,11 @@ void ast_printer_t::parenthesize(const std::string_view s1, const std::string_vi
 void ast_printer_t::parenthesize(const std::string_view s1, const std::string_view s2, const std::string_view s3) const
 {
   os << '(' << s1 << ' ' << s2 << ' ' << s3 << ')';
+}
+
+void ast_printer_t::parenthesize(const std::string_view s1, const std::string_view s2, const std::string_view s3, const std::string_view s4) const
+{
+  os << '(' << s1 << ' ' << s2 << ' ' << s3 << ' ' << s4 << ')';
 }
 
 void ast_printer_t::parenthesize(const std::string_view s, const expr_t * a, const expr_t * b) const
@@ -139,6 +151,7 @@ void ast_printer_t::visit(const op::control_word_t * control_word) const
   os << "(control_word ";
   for (const auto& op : control_word->ops) {
     reinterpret_cast<const stmt_t *>(op)->accept(this);
+    os << ' ';
   }
   os << ')';
 }
@@ -162,32 +175,36 @@ static std::string dma_hold_add(bool hold, dma::add_mode_t add)
        + dma::add_mode_string[static_cast<int>(add)];
 }
 
-void ast_printer_t::visit(const dma::ingress_imm_t * ingress_imm) const
+void ast_printer_t::visit(const dma::src_d0_imm_t * src_d0_imm) const
 {
-  parenthesize(dma_hold_add(ingress_imm->hold, ingress_imm->add),
-               dma::ingress_string[static_cast<int>(ingress_imm->ingress)],
-               ingress_imm->imm.expr);
+  parenthesize(dma_hold_add(src_d0_imm->hold, src_d0_imm->add),
+               dma::src_string[static_cast<int>(src_d0_imm->src)],
+	       "d0",
+               src_d0_imm->imm.expr);
 }
 
-void ast_printer_t::visit(const dma::egress_imm_t * egress_imm) const
+void ast_printer_t::visit(const dma::d0_dst_imm_t * d0_dst_imm) const
 {
-  parenthesize(dma_hold_add(egress_imm->hold, egress_imm->add),
-               dma::egress_string[static_cast<int>(egress_imm->egress)],
-               egress_imm->imm.expr);
+  parenthesize(dma_hold_add(d0_dst_imm->hold, d0_dst_imm->add),
+	       "d0",
+               dma::dst_string[static_cast<int>(d0_dst_imm->dst)],
+               d0_dst_imm->imm.expr);
 }
 
-void ast_printer_t::visit(const dma::ingress_ram_t * ingress_ram) const
+void ast_printer_t::visit(const dma::src_d0_ram_t * src_d0_ram) const
 {
-  parenthesize(dma_hold_add(ingress_ram->hold, ingress_ram->add),
-               dma::ingress_string[static_cast<int>(ingress_ram->ingress)],
-               dma::length_ram_string[static_cast<int>(ingress_ram->ram)]);
+  parenthesize(dma_hold_add(src_d0_ram->hold, src_d0_ram->add),
+               dma::src_string[static_cast<int>(src_d0_ram->src)],
+	       "d0",
+               dma::length_ram_string[static_cast<int>(src_d0_ram->ram)]);
 }
 
-void ast_printer_t::visit(const dma::egress_ram_t * egress_ram) const
+void ast_printer_t::visit(const dma::d0_dst_ram_t * d0_dst_ram) const
 {
-  parenthesize(dma_hold_add(egress_ram->hold, egress_ram->add),
-               dma::egress_string[static_cast<int>(egress_ram->egress)],
-               dma::length_ram_string[static_cast<int>(egress_ram->ram)]);
+  parenthesize(dma_hold_add(d0_dst_ram->hold, d0_dst_ram->add),
+	       "d0",
+               dma::dst_string[static_cast<int>(d0_dst_ram->dst)],
+               dma::length_ram_string[static_cast<int>(d0_dst_ram->ram)]);
 }
 
 void ast_printer_t::visit(const jump::jmp_t * jmp) const
@@ -224,6 +241,12 @@ void ast_printer_t::visit(const end::endi_t * endi) const
 {
   (void)endi;
   parenthesize("endi");
+}
+
+void ast_printer_t::visit(const nop::nop_t * nop) const
+{
+  (void)nop;
+  parenthesize("nop");
 }
 
 }
