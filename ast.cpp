@@ -3,11 +3,6 @@
 
 namespace dsp {
 
-void ast_printer_t::visit(const unary_t * unary) const
-{
-  parenthesize((unary->oper).lexeme, unary->right);
-}
-
 void ast_printer_t::visit(const binary_t * binary) const
 {
   parenthesize((binary->oper).lexeme, binary->left, binary->right);
@@ -18,9 +13,19 @@ void ast_printer_t::visit(const grouping_t * grouping) const
   parenthesize("grouping", grouping->expr);
 }
 
+void ast_printer_t::visit(const identifier_t * identifier) const
+{
+  parenthesize("identifier", identifier->name.lexeme);
+}
+
 void ast_printer_t::visit(const literal_t * literal) const
 {
   os << std::to_string(literal->value);
+}
+
+void ast_printer_t::visit(const unary_t * unary) const
+{
+  parenthesize((unary->oper).lexeme, unary->right);
 }
 
 void ast_printer_t::parenthesize(const std::string_view s, const expr_t * a) const

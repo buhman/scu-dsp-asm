@@ -8,10 +8,11 @@ namespace dsp {
 template <typename T>
 struct visitor_t
 {
-  virtual T visit(const unary_t * expr) const = 0;
   virtual T visit(const binary_t * expr) const = 0;
   virtual T visit(const grouping_t * expr) const = 0;
+  virtual T visit(const identifier_t * expr) const = 0;
   virtual T visit(const literal_t * expr) const = 0;
+  virtual T visit(const unary_t * expr) const = 0;
 
   virtual T visit(const op::alu_t * stmt) const = 0;
   virtual T visit(const op::mov_ram_x_t * mov_ram_x) const = 0;

@@ -17,10 +17,11 @@ struct ast_printer_t : visitor_t<void>
 
   std::ostream& os;
 
-  void visit(const unary_t * unary) const;
   void visit(const binary_t * binary) const;
   void visit(const grouping_t * grouping) const;
+  void visit(const identifier_t * identifier) const;
   void visit(const literal_t * literal) const;
+  void visit(const unary_t * unary) const;
 
   void visit(const op::alu_t * alu) const;
   void visit(const op::mov_ram_x_t * mov_ram_x) const;

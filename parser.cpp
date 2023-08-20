@@ -150,7 +150,8 @@ expr_t * parser_t::orl()
 
 expr_t * parser_t::primary()
 {
-  if (match(number)) return new literal_t(std::get<num_t>(previous().literal));
+  if      (match(number))     return new literal_t(std::get<num_t>(previous().literal));
+  else if (match(identifier)) return new identifier_t(previous());
 
   if (match(left_paren)) {
     expr_t * expr = expression();

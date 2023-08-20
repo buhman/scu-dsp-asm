@@ -44,6 +44,14 @@ struct grouping_t : expr_accept_t<grouping_t>
   const expr_t * expr;
 };
 
+struct identifier_t : expr_accept_t<identifier_t>
+{
+  identifier_t(token_t name)
+    : name(name) {}
+
+  const token_t name;
+};
+
 struct literal_t : expr_accept_t<literal_t>
 {
   literal_t(num_t value)
