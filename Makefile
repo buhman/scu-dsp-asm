@@ -1,4 +1,4 @@
-CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wpedantic -std=c++20
+CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wpedantic -Wno-c99-designator -std=c++20
 LDFLAGS =
 
 TARGET =
@@ -8,6 +8,7 @@ SRC = main.cpp
 SRC += lexer.cpp
 SRC += ast.cpp
 SRC += parser.cpp
+SRC += stmt_string.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 DEP = $(patsubst %.cpp,%.d,$(SRC))
 

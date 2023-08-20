@@ -30,9 +30,9 @@ struct ast_printer_t : visitor_t<void>
   void visit(const op::clr_a_t * clr_a) const;
   void visit(const op::mov_alu_a_t * mov_alu_a) const;
   void visit(const op::mov_ram_a_t * mov_ram_a) const;
-  void visit(const op::mov_imm_d1_t * mov_imm_) const;
-  void visit(const op::mov_ram_d1_t * mov_ram_) const;
-  void visit(const op::instruction_t * instruction) const;
+  void visit(const op::mov_imm_d1_t * mov_imm_d1) const;
+  void visit(const op::mov_ram_d1_t * mov_ram_d1) const;
+  void visit(const op::control_word_t * control_word) const;
 
   void visit(const load::mvi_t * mvi) const;
   void visit(const load::mvi_cond_t * mvi_cond) const;
@@ -52,7 +52,14 @@ struct ast_printer_t : visitor_t<void>
   void visit(const end::endi_t  * endi) const;
 
   void parenthesize(const std::string_view s, const expr_t * a) const;
+  void parenthesize(const std::string_view s1, const std::string_view s2, const expr_t * a) const;
+  void parenthesize(const std::string_view s1, const expr_t * a, const std::string_view s2) const;
+  void parenthesize(const std::string_view s1, const expr_t * a, const std::string_view s2, const std::string_view s3) const;
   void parenthesize(const std::string_view s, const expr_t * a, const expr_t * b) const;
+  void parenthesize(const std::string_view s) const;
+  void parenthesize(const std::string_view s1, const std::string_view s2) const;
+  void parenthesize(const std::string_view s1, const std::string_view s2, const std::string_view s3) const;
+
 };
 
 }

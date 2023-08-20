@@ -1,5 +1,3 @@
-#pragma once
-
 #include "stmt_string.hpp"
 #include "stmt_enum.hpp"
 
@@ -91,6 +89,11 @@ const std::string cond_string[] = {
 } // load
 
 namespace dma {
+
+const std::string hold_mode_string[] = {
+  [i(false)] = "dma",
+  [i(true )] = "dmah",
+};
 
 const std::string add_mode_string[] = {
   [i(add_mode_t::_0 )] = "0" ,

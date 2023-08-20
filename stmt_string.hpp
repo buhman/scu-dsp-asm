@@ -22,6 +22,7 @@ extern const std::string cond_string[];
 
 namespace dma {
 
+extern const std::string hold_mode_string[];
 extern const std::string add_mode_string[];
 extern const std::string ingress_string[];
 extern const std::string egress_string[];

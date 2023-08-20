@@ -122,9 +122,9 @@ struct mov_ram_d1_t : op_t, stmt_accept_t<mov_ram_d1_t>
   const d1_dest_t dest;
 };
 
-struct instruction_t : stmt_accept_t<instruction_t>
+struct control_word_t : stmt_accept_t<control_word_t>
 {
-  instruction_t(std::vector<const op_t *> ops)
+  control_word_t(std::vector<const op_t *> ops)
     : ops(ops) {}
 
   const std::vector<const op_t *> ops;
@@ -136,18 +136,21 @@ namespace load {
 
 struct mvi_t : stmt_accept_t<mvi_t>
 {
-  mvi_t(uimm_t<25> imm)
-    : imm(imm) {}
+  mvi_t(uimm_t<25> imm, dest_t dest)
+    : imm(imm), dest(dest) {}
 
   const uimm_t<25> imm;
+  const dest_t dest;
 };
 
 struct mvi_cond_t : stmt_accept_t<mvi_cond_t>
 {
-  mvi_cond_t(uimm_t<19> imm)
-    : imm(imm) {}
+  mvi_cond_t(uimm_t<19> imm, dest_t dest, cond_t cond)
+    : imm(imm), dest(dest), cond(cond) {}
 
   const uimm_t<19> imm;
+  const dest_t dest;
+  const cond_t cond;
 };
 
 } // load
@@ -156,40 +159,44 @@ namespace dma {
 
 struct ingress_imm_t : stmt_accept_t<ingress_imm_t>
 {
-  ingress_imm_t(bool hold, ingress_t ingress, simm_t<8> imm)
-    : hold(hold), ingress(ingress), imm(imm) {}
+  ingress_imm_t(bool hold, add_mode_t add, ingress_t ingress, simm_t<8> imm)
+    : hold(hold), add(add), ingress(ingress), imm(imm) {}
 
   const bool hold;
+  const add_mode_t add;
   const ingress_t ingress;
   const simm_t<8> imm;
 };
 
 struct egress_imm_t : stmt_accept_t<egress_imm_t>
 {
-  egress_imm_t(bool hold, egress_t egress, simm_t<8> imm)
-    : hold(hold), egress(egress), imm(imm) {}
+  egress_imm_t(bool hold, add_mode_t add, egress_t egress, simm_t<8> imm)
+    : hold(hold), add(add), egress(egress), imm(imm) {}
 
   const bool hold;
+  const add_mode_t add;
   const egress_t egress;
   const simm_t<8> imm;
 };
 
 struct ingress_ram_t : stmt_accept_t<ingress_ram_t>
 {
-  ingress_ram_t(bool hold, ingress_t ingress, length_ram_t ram)
-    : hold(hold), ingress(ingress), ram(ram) {}
+  ingress_ram_t(bool hold, add_mode_t add, ingress_t ingress, length_ram_t ram)
+    : hold(hold), add(add), ingress(ingress), ram(ram) {}
 
   const bool hold;
+  const add_mode_t add;
   const ingress_t ingress;
   const length_ram_t ram;
 };
 
 struct egress_ram_t : stmt_accept_t<egress_ram_t>
 {
-  egress_ram_t(bool hold, egress_t egress, length_ram_t ram)
-    : hold(hold), egress(egress), ram(ram) {}
+  egress_ram_t(bool hold, add_mode_t add, egress_t egress, length_ram_t ram)
+    : hold(hold), add(add), egress(egress), ram(ram) {}
 
   const bool hold;
+  const add_mode_t add;
   const egress_t egress;
   const length_ram_t ram;
 };

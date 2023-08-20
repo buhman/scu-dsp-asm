@@ -300,7 +300,7 @@ std::optional<stmt_t *> parser_t::op()
     else                        break;
   }
   if (ops.size() != 0)
-    return {new op::instruction_t(ops)};
+    return {new op::control_word_t(ops)};
   else
     return {};
 }

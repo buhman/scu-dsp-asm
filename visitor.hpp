@@ -23,7 +23,7 @@ struct visitor_t
   virtual T visit(const op::mov_ram_a_t * mov_ram_a) const = 0;
   virtual T visit(const op::mov_imm_d1_t * mov_imm_) const = 0;
   virtual T visit(const op::mov_ram_d1_t * mov_ram_) const = 0;
-  virtual T visit(const op::instruction_t * instruction) const = 0;
+  virtual T visit(const op::control_word_t * control_word) const = 0;
 
   virtual T visit(const load::mvi_t * mvi) const = 0;
   virtual T visit(const load::mvi_cond_t * mvi_cond) const = 0;

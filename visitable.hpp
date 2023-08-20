@@ -22,7 +22,7 @@ struct mov_alu_a_t;
 struct mov_ram_a_t;
 struct mov_imm_d1_t;
 struct mov_ram_d1_t;
-struct instruction_t;
+struct control_word_t;
 }
 
 namespace load{
