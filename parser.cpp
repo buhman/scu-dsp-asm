@@ -509,9 +509,36 @@ std::optional<stmt_t *> parser_t::dma()
     return {};
 }
 
+std::optional<jump::cond_t> parser_t::jump_cond()
+{
+  using namespace dsp::jump;
+
+  if      (match(_z))   return {cond_t::z};
+  else if (match(_nz))  return {cond_t::nz};
+  else if (match(_s))   return {cond_t::s};
+  else if (match(_ns))  return {cond_t::ns};
+  else if (match(_c))   return {cond_t::c};
+  else if (match(_nc))  return {cond_t::nc};
+  else if (match(_t0))  return {cond_t::t0};
+  else if (match(_nt0)) return {cond_t::nt0};
+  else if (match(_zs))  return {cond_t::zs};
+  else if (match(_nzs)) return {cond_t::nzs};
+  else                  return {};
+}
+
 std::optional<stmt_t *> parser_t::jump()
 {
-  return {};
+  if (match(_jmp)) {
+    if (auto cond_o = jump_cond()) {
+      consume(comma, "expected `,` after jump condition");
+      uimm_t<8> imm = uimm_t<8>(expression());
+      return {new jump::jmp_cond_t(*cond_o, imm)};
+    } else {
+      uimm_t<8> imm = uimm_t<8>(expression());
+      return {new jump::jmp_t(imm)};
+    }
+  } else
+    return {};
 }
 
 std::optional<stmt_t *> parser_t::loop()

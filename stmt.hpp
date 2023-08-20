@@ -217,11 +217,11 @@ struct jmp_t : stmt_accept_t<jmp_t>
 
 struct jmp_cond_t : stmt_accept_t<jmp_cond_t>
 {
-  jmp_cond_t(uimm_t<8> imm, cond_t cond)
-    : imm(imm), cond(cond) {}
+  jmp_cond_t(cond_t cond, uimm_t<8> imm)
+    : cond(cond), imm(imm) {}
 
-  const uimm_t<8> imm;
   const cond_t cond;
+  const uimm_t<8> imm;
 };
 
 } // jump

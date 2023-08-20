@@ -59,6 +59,7 @@ struct parser_t
   dma::dst_t dma_dst();
   std::optional<dma::length_ram_t> dma_length_ram();
   std::optional<stmt_t *> dma();
+  std::optional<jump::cond_t> jump_cond();
   std::optional<stmt_t *> jump();
   std::optional<stmt_t *> loop();
   std::optional<stmt_t *> end();

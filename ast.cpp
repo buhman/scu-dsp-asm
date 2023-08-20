@@ -215,8 +215,8 @@ void ast_printer_t::visit(const jump::jmp_t * jmp) const
 void ast_printer_t::visit(const jump::jmp_cond_t * jmp_cond) const
 {
   parenthesize("jmp",
-               jmp_cond->imm.expr,
-               jump::cond_string[static_cast<int>(jmp_cond->cond)]);
+	       jump::cond_string[static_cast<int>(jmp_cond->cond)],
+	       jmp_cond->imm.expr);
 }
 
 void ast_printer_t::visit(const loop::btm_t * btm) const
