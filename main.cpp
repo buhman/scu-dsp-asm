@@ -2,10 +2,13 @@
 #include <fstream>
 #include <string>
 #include <optional>
+#include <bitset>
 
 #include "lexer.hpp"
 #include "token.hpp"
-#include "ast.hpp"
+#include "ast_printer.hpp"
+#include "ast_resolver.hpp"
+#include "ast_emitter.hpp"
 #include "parser.hpp"
 
 namespace dsp {
@@ -21,13 +24,25 @@ static void run(std::string source)
   std::string_view buf(source);
   lexer_t lexer(buf);
   std::vector<token_t> tokens = lexer.lex_tokens();
-  parser_t parser(tokens);
-  std::optional<stmt_t *> stmt_o = parser.statement();
-  if (stmt_o) {
-    dsp::ast_printer_t p(std::cout);
-    (*stmt_o)->accept(&p);
+  parser_t pass1(tokens);
+  parser_t pass2(tokens);
+  ast::printer_t printer(std::cout);
+  ast::pc_t pc;
+  ast::addresses_t addresses;
+  ast::resolver_t resolver(pc, addresses);
+  while (auto stmt_o = pass1.statement()) {
+    (*stmt_o)->accept(&printer);
+    std::cout << std::endl << std::flush;
+    (*stmt_o)->accept(&resolver);
   }
-  std::cout << std::endl << std::flush;
+  ast::variables_t variables;
+  ast::emitter_t emitter(variables, addresses);
+  while (auto stmt_o = pass2.statement()) {
+    uint32_t output = (*stmt_o)->accept(&emitter);
+    if (output != 0xffff'ffff) {
+      std::cout << std::bitset<32>(output) << std::endl;
+    }
+  }
 }
 
 static void run_prompt()

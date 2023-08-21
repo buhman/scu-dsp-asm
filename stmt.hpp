@@ -12,7 +12,7 @@ namespace dsp {
 struct stmt_t
 {
   virtual void accept(visitor_t<void> const * visitor) const = 0;
-  virtual std::string accept(visitor_t<std::string> const * visitor) const = 0;
+  virtual uint32_t accept(visitor_t<uint32_t> const * visitor) const = 0;
 };
 
 template <typename T>
@@ -21,7 +21,7 @@ struct stmt_accept_t : stmt_t {
       return visitor->visit(static_cast<const T*>(this));
     }
 
-    virtual std::string accept(visitor_t<std::string> const * visitor) const
+    virtual uint32_t accept(visitor_t<uint32_t> const * visitor) const
     {
       return visitor->visit(static_cast<const T*>(this));
     }
@@ -36,6 +36,13 @@ struct imm_t {
 
   static constexpr bool sign = S;
   static constexpr int bits = N;
+
+  bool in_range(num_t value) const
+  {
+    constexpr num_t max = (1L << (bits - static_cast<num_t>(sign))) - 1;
+    constexpr num_t min = sign ? -(max + 1) : 0;
+    return value <= max && value >= min;
+  }
 };
 
 template <int N>

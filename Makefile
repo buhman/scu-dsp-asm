@@ -6,7 +6,9 @@ CXX = $(TARGET)clang++
 
 SRC = main.cpp
 SRC += lexer.cpp
-SRC += ast.cpp
+SRC += ast_printer.cpp
+SRC += ast_resolver.cpp
+SRC += ast_emitter.cpp
 SRC += parser.cpp
 SRC += stmt_string.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
@@ -23,7 +25,7 @@ main: $(OBJ)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:
-	rm -f *.o *.d *.gch
+	rm -f *.o *.d *.gch main
 
 .SUFFIXES:
 .INTERMEDIATE:

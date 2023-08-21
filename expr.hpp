@@ -11,7 +11,7 @@ namespace dsp {
 struct expr_t
 {
   virtual void accept(visitor_t<void> const * visitor) const = 0;
-  virtual std::string accept(visitor_t<std::string> const * visitor) const = 0;
+  virtual uint32_t accept(visitor_t<uint32_t> const * visitor) const = 0;
 };
 
 template <typename T>
@@ -20,7 +20,7 @@ struct expr_accept_t : expr_t {
       return visitor->visit(static_cast<const T*>(this));
     }
 
-    virtual std::string accept(visitor_t<std::string> const * visitor) const
+    virtual uint32_t accept(visitor_t<uint32_t> const * visitor) const
     {
       return visitor->visit(static_cast<const T*>(this));
     }
