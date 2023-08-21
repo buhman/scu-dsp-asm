@@ -19,11 +19,12 @@ enum struct alu_type_t : int {
 };
 
 enum struct xy_src_t {
+  m0 , m1 , m2 , m3 ,
   mc0, mc1, mc2, mc3,
-  m0 , m1 , m2 ,  m3,
 };
 
 enum struct d1_dest_t {
+  mc0, mc1, mc2, mc3,
   rx , pl ,
   ra0, wa0,
   lop, top,
@@ -31,9 +32,9 @@ enum struct d1_dest_t {
 };
 
 enum struct d1_src_t {
-  mc0, mc1, mc2, mc3,
   m0 , m1 , m2 , m3 ,
-  alh, all,
+  mc0, mc1, mc2, mc3,
+  all, alh,
 };
 
 }
@@ -89,9 +90,9 @@ enum struct length_ram_t {
 namespace jump {
 
 enum struct cond_t {
-  z , nz,
-  s , ns,
-  c , nc,
+  z , nz ,
+  s , ns ,
+  c , nc ,
   t0, nt0,
   zs, nzs,
 };

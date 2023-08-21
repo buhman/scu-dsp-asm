@@ -155,7 +155,7 @@ void ast_printer_t::visit(const op::control_word_t * control_word) const
 {
   os << "(control_word ";
   for (const auto& op : control_word->ops) {
-    reinterpret_cast<const stmt_t *>(op)->accept(this);
+    dynamic_cast<const stmt_t *>(op)->accept(this);
     os << ' ';
   }
   os << ')';

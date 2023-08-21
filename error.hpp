@@ -17,7 +17,7 @@ static inline void report(const int line, const int col, const std::string where
   had_error = true;
 }
 
-static inline void error(const int line,  const int col, std::string message)
+static inline void error(const int line, const int col, std::string message)
 {
   report(line, col, "", message);
 }

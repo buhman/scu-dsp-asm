@@ -31,10 +31,10 @@ struct mvi_cond_t;
 }
 
 namespace dma {
-struct src_d0_imm_t;
 struct d0_dst_imm_t;
-struct src_d0_ram_t;
+struct src_d0_imm_t;
 struct d0_dst_ram_t;
+struct src_d0_ram_t;
 }
 
 namespace jump {
