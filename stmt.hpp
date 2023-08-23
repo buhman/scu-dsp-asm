@@ -29,18 +29,19 @@ struct stmt_accept_t : stmt_t {
 
 template <bool S, int N>
 struct imm_t {
-  imm_t(expr_t * expr)
-    : expr(expr) {}
+  imm_t(const token_t& token, const expr_t * expr)
+    : token(token), expr(expr) {}
 
+  const token_t& token;
   const expr_t * expr;
 
   static constexpr bool sign = S;
   static constexpr int bits = N;
+  static constexpr num_t max = (1L << (bits - static_cast<num_t>(sign))) - 1;
+  static constexpr num_t min = sign ? -(max + 1) : 0;
 
   bool in_range(num_t value) const
   {
-    constexpr num_t max = (1L << (bits - static_cast<num_t>(sign))) - 1;
-    constexpr num_t min = sign ? -(max + 1) : 0;
     return value <= max && value >= min;
   }
 };
@@ -227,10 +228,10 @@ static uint32_t d1_src_bits(d1_src_t src)
 
 struct mov_imm_d1_t : op_t, stmt_accept_t<mov_imm_d1_t>
 {
-  mov_imm_d1_t(simm_t<8> imm, d1_dest_t dest)
+  mov_imm_d1_t(uimm_t<8> imm, d1_dest_t dest)
     : imm(imm), dest(dest) {}
 
-  const simm_t<8> imm;
+  const uimm_t<8> imm;
   const d1_dest_t dest;
 
   uint32_t mask() const { return op_mask(0b11'1111'1111'1111 << 0 ); }

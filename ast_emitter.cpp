@@ -1,10 +1,32 @@
 #include <unordered_map>
 
 #include "ast_emitter.hpp"
+#include "error.hpp"
 
 namespace dsp {
 
 namespace ast {
+
+static emitter_error_t error(const token_t& token, const std::string message)
+{
+  dsp::error(token, message);
+  return emitter_error_t(message);
+}
+
+template <bool S, int N>
+static emitter_error_t imm_out_of_range(const imm_t<S, N>& imm, num_t value)
+{
+  using imm_type = imm_t<S, N>;
+  std::string message = "immediate value is out of range";
+  dsp::error(imm.token, message);
+  std::cerr << "note:" << std::endl
+	    << "  expect range: ["
+	    << imm_type::min << ',' << imm_type::max
+	    << ']' << std::endl
+	    << "  actual value: " << value << std::endl;
+
+  return emitter_error_t(message);
+}
 
 // expressions
 
@@ -41,7 +63,7 @@ uint32_t emitter_t::visit(const identifier_t * identifier) const
   if (variables.contains(identifier->name.lexeme)) {
     return variables.at(identifier->name.lexeme);
   } else {
-    throw std::runtime_error("undefined identifier");
+    throw ast::error(identifier->name, "undefined identifier");
   }
 }
 
@@ -113,7 +135,7 @@ uint32_t emitter_t::visit(const op::mov_imm_d1_t * mov_imm_d1) const
   if (mov_imm_d1->imm.in_range(value))
     return mov_imm_d1->code() | mov_imm_d1->bits() | value;
   else
-    throw std::runtime_error("out of range");
+    throw imm_out_of_range(mov_imm_d1->imm, value);
 }
 
 uint32_t emitter_t::visit(const op::mov_ram_d1_t * mov_ram_d1) const
@@ -130,12 +152,20 @@ uint32_t emitter_t::visit(const op::control_word_t * control_word) const
 
 uint32_t emitter_t::visit(const load::mvi_t * mvi) const
 {
-  return mvi->code() | mvi->bits();
+  num_t value = mvi->imm.expr->accept(this);
+  if (mvi->imm.in_range(value))
+    return mvi->code() | mvi->bits() | value;
+  else
+    throw imm_out_of_range(mvi->imm, value);
 }
 
 uint32_t emitter_t::visit(const load::mvi_cond_t * mvi_cond) const
 {
-  return mvi_cond->code() | mvi_cond->bits();
+  num_t value = mvi_cond->imm.expr->accept(this);
+  if (mvi_cond->imm.in_range(value))
+    return mvi_cond->code() | mvi_cond->bits() | value;
+  else
+    throw imm_out_of_range(mvi_cond->imm, value);
 }
 
 uint32_t emitter_t::visit(const dma::src_d0_imm_t * src_d0_imm) const
@@ -144,7 +174,7 @@ uint32_t emitter_t::visit(const dma::src_d0_imm_t * src_d0_imm) const
   if (src_d0_imm->imm.in_range(value))
     return src_d0_imm->code() | src_d0_imm->bits() | value;
   else
-    throw std::runtime_error("out of range");
+    throw imm_out_of_range(src_d0_imm->imm, value);
 }
 
 uint32_t emitter_t::visit(const dma::d0_dst_imm_t * d0_dst_imm) const
@@ -153,7 +183,7 @@ uint32_t emitter_t::visit(const dma::d0_dst_imm_t * d0_dst_imm) const
   if (d0_dst_imm->imm.in_range(value))
     return d0_dst_imm->code() | d0_dst_imm->bits() | value;
   else
-    throw std::runtime_error("out of range");
+    throw imm_out_of_range(d0_dst_imm->imm, value);
 }
 
 uint32_t emitter_t::visit(const dma::src_d0_ram_t * src_d0_ram) const
@@ -168,12 +198,20 @@ uint32_t emitter_t::visit(const dma::d0_dst_ram_t * d0_dst_ram) const
 
 uint32_t emitter_t::visit(const jump::jmp_t * jmp) const
 {
-  return jmp->code() | jmp->bits();
+  num_t value = jmp->imm.expr->accept(this);
+  if (jmp->imm.in_range(value))
+    return jmp->code() | jmp->bits() | value;
+  else
+    throw imm_out_of_range(jmp->imm, value);
 }
 
 uint32_t emitter_t::visit(const jump::jmp_cond_t * jmp_cond) const
 {
-  return jmp_cond->code() | jmp_cond->bits();
+  num_t value = jmp_cond->imm.expr->accept(this);
+  if (jmp_cond->imm.in_range(value))
+    return jmp_cond->code() | jmp_cond->bits() | value;
+  else
+    throw imm_out_of_range(jmp_cond->imm, value);
 }
 
 uint32_t emitter_t::visit(const loop::btm_t * btm) const
@@ -204,7 +242,7 @@ uint32_t emitter_t::visit(const nop::nop_t * nop) const
 uint32_t emitter_t::visit(const assign_t * assign) const
 {
   if (variables.contains(assign->name.lexeme)) {
-    throw std::runtime_error("assignment redefinition is not allowed");
+    throw ast::error(assign->name, "assignment redefinition is not allowed");
   } else {
     num_t value = assign->value->accept(this);
     variables.insert({assign->name.lexeme, value});

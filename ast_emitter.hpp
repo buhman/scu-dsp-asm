@@ -13,6 +13,13 @@ namespace dsp {
 
 namespace ast {
 
+struct emitter_error_t : std::runtime_error
+{
+  emitter_error_t(const std::string& msg)
+    : std::runtime_error(msg)
+  { }
+};
+
 struct emitter_t : visitor_t<uint32_t>
 {
   emitter_t(variables_t& variables, const addresses_t& addresses)

@@ -280,7 +280,8 @@ std::optional<op::op_t *> parser_t::xyd1_bus()
       else
 	throw error(peek(), "expected x-bus, y-bus, or d-bus destination operand");
     } else {
-      simm_t<8> imm = simm_t<8>(expression());
+      uimm_t<8> imm = uimm_t<8>(peek(), expression());
+      consume(comma, "expected `,`");
       if (auto dest_o = d1_dest())
 	return {new op::mov_imm_d1_t(imm, *dest_o)};
       else
@@ -365,15 +366,16 @@ load::cond_t parser_t::load_cond()
 std::optional<stmt_t *> parser_t::load()
 {
   if (match(_mvi)) {
+    const token_t& expr_token = peek();
     expr_t * expr = expression();
     consume(comma, "expected `,`");
     load::dest_t dest = parser_t::load_dest();
     if (match(comma)) {
       load::cond_t cond = load_cond();
-      uimm_t<19> imm = uimm_t<19>(expr);
+      uimm_t<19> imm = uimm_t<19>(expr_token, expr);
       return {new load::mvi_cond_t(imm, dest, cond)};
     } else {
-      uimm_t<25> imm = uimm_t<25>(expr);
+      uimm_t<25> imm = uimm_t<25>(expr_token, expr);
       return {new load::mvi_t(imm, dest)};
     }
   } else
@@ -510,7 +512,7 @@ std::optional<stmt_t *> parser_t::dma()
       if (auto length_ram_o = dma_length_ram()) {
 	return {new dma::d0_dst_ram_t(hold, add, dst, *length_ram_o)};
       } else {
-	uimm_t<8> imm = uimm_t<8>(expression());
+	uimm_t<8> imm = uimm_t<8>(peek(), expression());
 	return {new dma::d0_dst_imm_t(hold, add, dst, imm)};
       }
     } else {
@@ -521,7 +523,7 @@ std::optional<stmt_t *> parser_t::dma()
       if (auto length_ram_o = dma_length_ram()) {
 	return {new dma::src_d0_ram_t(hold, add, src, *length_ram_o)};
       } else {
-	uimm_t<8> imm = uimm_t<8>(expression());
+	uimm_t<8> imm = uimm_t<8>(peek(), expression());
 	return {new dma::src_d0_imm_t(hold, add, src, imm)};
       }
     }
@@ -551,10 +553,10 @@ std::optional<stmt_t *> parser_t::jump()
   if (match(_jmp)) {
     if (auto cond_o = jump_cond()) {
       consume(comma, "expected `,` after jump condition");
-      uimm_t<8> imm = uimm_t<8>(expression());
+      uimm_t<8> imm = uimm_t<8>(peek(), expression());
       return {new jump::jmp_cond_t(*cond_o, imm)};
     } else {
-      uimm_t<8> imm = uimm_t<8>(expression());
+      uimm_t<8> imm = uimm_t<8>(peek(), expression());
       return {new jump::jmp_t(imm)};
     }
   } else
