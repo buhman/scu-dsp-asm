@@ -234,9 +234,9 @@ struct mov_imm_d1_t : op_t, stmt_accept_t<mov_imm_d1_t>
   const uimm_t<8> imm;
   const d1_dest_t dest;
 
-  uint32_t mask() const { return op_mask(0b11'1111'1111'1111 << 0 ); }
-  uint32_t code() const { return op_code(0b01'0000'0000'0000 << 14); }
-  uint32_t bits() const { return d1_dest_bits(dest);                 }
+  uint32_t mask() const { return op_mask(0b11'1111'1111'1111 << 0); }
+  uint32_t code() const { return op_code(0b01'0000'0000'0000 << 0); }
+  uint32_t bits() const { return d1_dest_bits(dest);                }
 };
 
 struct mov_ram_d1_t : op_t, stmt_accept_t<mov_ram_d1_t>
@@ -247,8 +247,8 @@ struct mov_ram_d1_t : op_t, stmt_accept_t<mov_ram_d1_t>
   const d1_src_t src;
   const d1_dest_t dest;
 
-  uint32_t mask() const { return op_mask(0b11'1111'0000'1111 << 0 );    }
-  uint32_t code() const { return op_code(0b11'0000'0000'0000 << 14);    }
+  uint32_t mask() const { return op_mask(0b11'1111'0000'1111 << 0);     }
+  uint32_t code() const { return op_code(0b11'0000'0000'0000 << 0);     }
   uint32_t bits() const { return d1_dest_bits(dest) | d1_src_bits(src); }
 };
 

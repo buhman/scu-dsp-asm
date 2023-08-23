@@ -3,6 +3,7 @@
 #include <string>
 #include <optional>
 #include <bitset>
+#include <sstream>
 
 #include "lexer.hpp"
 #include "token.hpp"
@@ -17,7 +18,18 @@ bool had_error = false;
 
 }
 
-static void run(std::string source)
+static void write(std::ostream& os, uint32_t v)
+{
+  const char out[4] = {
+    static_cast<char>((v >> 24) & 0xff),
+    static_cast<char>((v >> 16) & 0xff),
+    static_cast<char>((v >> 8 ) & 0xff),
+    static_cast<char>((v >> 0 ) & 0xff),
+  };
+  os.write(out, 4);
+}
+
+static void run(std::ostream& os, std::string source)
 {
   using namespace dsp;
 
@@ -41,6 +53,7 @@ static void run(std::string source)
     uint32_t output = (*stmt_o)->accept(&emitter);
     if (output != 0xffff'ffff) {
       std::cout << std::bitset<32>(output) << std::endl;
+      write(os, output);
     }
   }
 }
@@ -51,16 +64,17 @@ static void run_prompt()
   std::string line;
   std::cout << prompt << std::flush;
   while (std::getline(std::cin, line)) {
-    run(line);
+    std::ostringstream os;
+    run(os, line);
     std::cout << prompt << std::flush;
   }
 }
 
-static int run_file(char const * const filename)
+static int run_file(char const * const input_filename, char const * const output_filename)
 {
-  std::ifstream is {filename, std::ios::binary | std::ios::ate};
+  std::ifstream is {input_filename, std::ios::binary | std::ios::ate};
   if (!is.is_open()) {
-    std::cerr << "failed to open " << filename << std::endl;
+    std::cerr << "failed to open " << input_filename << std::endl;
     return -1;
   }
   const std::streampos size = is.tellg();
@@ -70,7 +84,19 @@ static int run_file(char const * const filename)
     std::cerr << "read failed" << std::endl;
     return -1;
   }
-  run(buf);
+
+  std::ostringstream os;
+  run(os, buf);
+
+  if (!dsp::had_error) {
+    std::ofstream ofs {output_filename, std::ios::binary | std::ios::trunc};
+    if (!ofs.is_open()) {
+      std::cerr << "failed to open " << output_filename << std::endl;
+      return -1;
+    }
+    ofs << os.str();
+  }
+
   return dsp::had_error;
 }
 
@@ -78,9 +104,9 @@ int main(const int argc, char const * const argv[])
 {
   switch (argc) {
   case 1: run_prompt(); return dsp::had_error;
-  case 2: return run_file(argv[1]);
+  case 3: return run_file(argv[1], argv[2]);
   default:
-    std::cerr << "Usage: " << argv[0] << " [filename]" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " [input-filename output-filename]" << std::endl;
     return -1;
   }
 }
