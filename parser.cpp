@@ -615,7 +615,11 @@ std::optional<stmt_t *> parser_t::statement()
     else
       throw error(peek(), "expected eol or eof after instruction");
   } else {
-    throw error(peek(), "expected statement");
+    auto exc = error(peek(), "expected statement");
+    advance();
+    if (check(equal) || check(_equ))
+      std::cerr << "hint: it is not legal to assign a value to a keyword" << std::endl;
+    throw exc;
   }
 }
 
