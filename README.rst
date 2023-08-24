@@ -10,6 +10,13 @@ Usage:
    
    scu-dsp-asm input-file.asm output-file.bin
 
+Alternately, use the ``-s`` (source code) command-line argument to
+emit a C-syntax source code fragment:
+   
+.. code::   
+
+   scu-dsp-asm -s input-file.asm output-file.inc
+
 If no arguments are given, scu-dsp-asm starts a basic REPL.
 
 Wherever possible, scu-dsp-asm attempts to preserve compatibility with
