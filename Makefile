@@ -2,7 +2,7 @@ STATIC = -static -static-libgcc -static-libstdc++
 CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wno-c99-designator -std=c++20
 LDFLAGS =
 
-TARGET =
+TARGET ?=
 CXX = $(TARGET)g++
 
 SRC = main.cpp
