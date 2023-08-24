@@ -95,8 +95,7 @@ contain any X-bus operation to start with.
 Motorola S-record output is not supported
 -----------------------------------------
 
-Instead, scu-dsp-asm currently emits a raw binary file that contains
-fully assembled SCU DSP code.
+It is suspected that this feature is not useful.
 
 Misleading, contradictory, and completely incorrect documentation
 =================================================================
