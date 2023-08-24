@@ -22,17 +22,21 @@ const std::string alu_type_string[] = {
 };
 
 const std::string xy_src_string[] = {
-  [i(xy_src_t::mc0)] = "mc0",
-  [i(xy_src_t::mc1)] = "mc1",
-  [i(xy_src_t::mc2)] = "mc2",
-  [i(xy_src_t::mc3)] = "mc3",
   [i(xy_src_t::m0 )] = "m0" ,
   [i(xy_src_t::m1 )] = "m1" ,
   [i(xy_src_t::m2 )] = "m2" ,
   [i(xy_src_t::m3 )] = "m3" ,
+  [i(xy_src_t::mc0)] = "mc0",
+  [i(xy_src_t::mc1)] = "mc1",
+  [i(xy_src_t::mc2)] = "mc2",
+  [i(xy_src_t::mc3)] = "mc3",
 };
 
 const std::string d1_dest_string[] = {
+  [i(d1_dest_t::mc0)] = "mc0",
+  [i(d1_dest_t::mc1)] = "mc1",
+  [i(d1_dest_t::mc2)] = "mc2",
+  [i(d1_dest_t::mc3)] = "mc3",
   [i(d1_dest_t::rx )] = "rx" ,
   [i(d1_dest_t::pl )] = "pl" ,
   [i(d1_dest_t::ra0)] = "ra0",
@@ -46,14 +50,16 @@ const std::string d1_dest_string[] = {
 };
 
 const std::string d1_src_string[] = {
-  [i(d1_src_t::mc0)] = "mc0",
-  [i(d1_src_t::mc1)] = "mc1",
-  [i(d1_src_t::mc2)] = "mc2",
-  [i(d1_src_t::mc3)] = "mc3",
   [i(d1_src_t::m0 )] = "m0" ,
   [i(d1_src_t::m1 )] = "m1" ,
   [i(d1_src_t::m2 )] = "m2" ,
   [i(d1_src_t::m3 )] = "m3" ,
+  [i(d1_src_t::mc0)] = "mc0",
+  [i(d1_src_t::mc1)] = "mc1",
+  [i(d1_src_t::mc2)] = "mc2",
+  [i(d1_src_t::mc3)] = "mc3",
+  [i(d1_src_t::all)] = "all",
+  [i(d1_src_t::alh)] = "alh",
 };
 
 }
