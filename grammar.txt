@@ -1,3 +1,18 @@
+expression     → term
+term           → factor ( ( "-" | "+" ) factor )*
+factor         → unary ( ( "/" | "*" | "%" ) unary )*
+unary          → ( "~" | "+" | "-" ) unary
+               | shift
+shift          → andl ( ( "<<" | ">>" ) andl )*
+andl           → orl ( "&" orl )*
+orl            → andl ( ( "|" | "^" ) andl )*
+primary        → NUMBER
+               | "(" expression ")"
+
+uimm8  → expression
+uimm19 → expression
+uimm25 → expression
+
 alu → and | or | xor | add | sub | ad2 | sr | rr | sl | rl | rl8
 
 xy_src → "mc0" | "mc1" | "mc2" | "mc3"
@@ -25,12 +40,14 @@ d1_src → "mc0" | "mc1" | "mc2" | "mc3"
        | "m0"  | "m1"  | "m2"  | "m3"
        | "alh" | "all"
 
-mov_imm_d1 → "mov" simm8  "," d1_dest
+mov_imm_d1 → "mov" uimm8  "," d1_dest
 mov_ram_d1 → "mov" d1_src "," d1_dest
 
 d1_bus → mov_imm_d1 → mov_ram_d1
 
-op → ( alu | x_bus | y_bus | d1_bus ) +
+nop → "nop"
+
+op → ( nop | alu | x_bus | y_bus | d1_bus ) +
 
 load_dest → "mc0" | "mc1" | "mc2" | "mc3"
           | "rx"  | "pl"
@@ -50,7 +67,7 @@ load → mvi | mvi_cond
 
 dma_ingress → "m0" | "m1" | "m2" | "m3"
             | "prg"
-         
+
 dma_egress  → "m0" | "m1" | "m2" | "m3"
 
 add_mode = "0" | "1" | "2" | "4" | "8" | "16" | "32" | "64"
@@ -60,8 +77,8 @@ dma_dmah → ("dma" | "dmah") add_mode?
 dma_length_ram → "m0"  | "m1"  | "m2"  | "m3"
                | "mc0" | "mc1" | "mc2" | "mc3"
 
-dma_ingress_imm → dma_dmah "d0"       "," dma_ingress "," simm8
-dma_egress_imm  → dma_dmah dma_egress "," "d0"        "," simm8
+dma_ingress_imm → dma_dmah "d0"       "," dma_ingress "," uimm8
+dma_egress_imm  → dma_dmah dma_egress "," "d0"        "," uimm8
 dma_ingress_ram → dma_dmah "d0"       "," dma_ingress "," dma_length_ram
 dma_egress_ram  → dma_dmah dma_egress "," "d0"        "," dma_length_ram
 
@@ -82,8 +99,7 @@ loop → "btm" | "lps"
 
 end → "end" | "endi"
 
-instruction → "nop"
-            | op
+instruction → op
 	    | load
 	    | dma
 	    | jump
@@ -98,4 +114,3 @@ instruction_statement → label? instruction? "\n"
 
 statement → assignment_statement
           | instruction_statement
-

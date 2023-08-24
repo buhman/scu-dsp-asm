@@ -1,16 +1,3 @@
-/*
-expression     → term ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" | "%" ) unary )* ;
-unary          → ( "~" | "+" | "-" ) unary
-               | shift ;
-shift          → andl ( ( "<<" | ">>" ) andl )*
-andl           → orl ( "&" orl )*
-orl            → andl ( ( "|" | "^" ) andl )*
-primary        → NUMBER
-               | "(" expression ")" ;
-*/
-
 #include <string>
 #include <optional>
 #include <cassert>
