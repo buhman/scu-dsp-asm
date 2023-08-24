@@ -15,7 +15,7 @@ SRC += stmt_string.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 DEP = $(patsubst %.cpp,%.d,$(SRC))
 
-MAIN = scu-dsp-asm
+MAIN ?= scu-dsp-asm
 
 all: $(MAIN)
 
