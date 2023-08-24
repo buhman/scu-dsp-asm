@@ -59,35 +59,6 @@ This change is not consistent with what is written in the SCU manual
 Differences that affect code generation
 =======================================
 
-DMA default "add mode"
-----------------------
-
-``dspasm.exe`` has a bug where, despite the SCU manual
-(ST-97-R5-072694) claiming that the default DMA "add mode" is ``1``,
-the generated code is "add mode" ``2``.
-
-This bug is documented in "Sega Developers Conference Conference
-Proceedings March 5 7, 1996" on pdf page 48, printed page 3-14,
-slide 25. However, Sega of America did not fully understand the nature
-of the bug: patching ``dspasm.exe`` output is not necessary, because
-``dspasm.exe`` does in fact generate the correct code for the ``DMA1``
-mnemonic.
-
-In short:
-
-- ``dspasm.exe`` assembles ``DMA`` as the equivalent of the ``DMA2``
-  mnemonic
-
-- scu-dsp-asm assembles ``DMA`` as the equivalent of the ``DMA1``
-
-.. note::
-
-   It is unclear which of these is correct. A future version of
-   scu-dsp-asm may change this behavior.
-
-   The documentation, dspasm.exe, and the real SCU DSP are each
-   representing this in a mutually inconsistent way.
-
 Spurious invalid X-bus opcode generation
 ----------------------------------------
 
@@ -119,3 +90,65 @@ Motorola S-record output is not supported
 
 Instead, scu-dsp-asm currently emits a raw binary file that contains
 fully assembled SCU DSP code.
+
+Misleading, contradictory, and completely incorrect documentation
+=================================================================
+
+DMA default "add mode"
+----------------------
+
+Contrast to what is written in the SCU manual (ST-97-R5-072694), the
+default DMA "add mode" for both dspasm.exe and scp-dsp-asm is
+``2``. E.g:
+
+- ``DMA`` is a synonym for ``DMA2``
+  
+- ``DMAH`` is a synonym for ``DMAH2``
+
+In "Sega Developers Conference Conference Proceedings March 5-7, 1996"
+pdf page 48, printed page 3-14, slide 25:
+
+   You need to modify your object code, either by hand or with a
+   custom tool.
+
+This is completely incorrect, and both scu-dsp-asm and dspasm.exe will
+emit "add mode 1" via the ``DMA1`` and ``DMAH1`` mnemonics.
+
+DMA "add mode" and bytes
+------------------------
+
+All of the documentation you have read is invalid; here is the correct
+relationship between DMA "add mode" mnemonics, and the number of
+incremented bytes:
+
+.. list-table::
+   :header-rows: 1
+   :stub-columns: 1
+
+   * - mnemonic
+     - D0 → [RAM]
+     - [RAM] →D0
+   * - DMA0
+     - 0 bytes
+     - 0 bytes
+   * - DMA1
+     - 0 bytes
+     - 2 bytes
+   * - DMA2
+     - 4 bytes
+     - 4 bytes
+   * - DMA4
+     - 4 bytes
+     - 8 bytes
+   * - DMA8
+     - 0 bytes
+     - 16 bytes
+   * - DMA16
+     - 0 bytes
+     - 32 bytes
+   * - DMA32
+     - 4 bytes
+     - 64 bytes
+   * - DMA64
+     - 4 bytes
+     - 128 bytes
