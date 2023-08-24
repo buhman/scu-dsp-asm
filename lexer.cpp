@@ -188,8 +188,12 @@ std::optional<token_t> lexer_t::lex_token()
     case ';':
       while (!at_end_p() && peek() != '\n') advance();
       break;
-    case ' ':
+    case '\\':
+      if      (match('\n')) { continue; }
+      else if (match('\r')) { if (match('\n')) continue; }
+      break;
     case '\r':
+    case ' ':
     case '\t':
       break;
     case '\n':
@@ -218,12 +222,18 @@ std::optional<token_t> lexer_t::lex_token()
 	if (hex_t::pred(peek())) {
 	  start_ix += 2;
 	  return {_number<hex_t>()};
-	}
+	} else {
+          error(pos.line, pos.col, "expected hexadecimal literal");
+          return {};
+        }
       } else if (match('b')) {
 	if (bin_t::pred(peek())) {
 	  start_ix += 2;
 	  return {_number<bin_t>()};
-	}
+	} else {
+          error(pos.line, pos.col, "expected binary literal");
+          return {};
+        }
       }
       [[fallthrough]];
     default:
