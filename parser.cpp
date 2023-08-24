@@ -440,7 +440,7 @@ static dma::add_mode_t dma_add(const token_t& token)
 
   switch (token.type) {
   case _dma:    [[fallthrough]];
-  case _dmah:   return add_mode_t::_1;
+  case _dmah:   return add_mode_t::_2;
   case _dma0:   [[fallthrough]];
   case _dmah0:  return add_mode_t::_0;
   case _dma1:   [[fallthrough]];
