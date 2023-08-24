@@ -123,9 +123,10 @@ emit "add mode 1" via the ``DMA1`` and ``DMAH1`` mnemonics.
 DMA "add mode" and bytes
 ------------------------
 
-All of the documentation you have read is invalid; this is the correct
-relationship between DMA "add mode" mnemonics. The right columns represent the
-the increment added an offset of RA0/WA0 after each bus transfer:
+All of the SEGA-authored documentation on this topic is invalid. The
+the correct relationship between DMA "add mode" mnemonics and bus
+address offsets is shown below. The right columns represent the
+increment added to the bus address after each bus transfer:
 
 .. list-table::
    :header-rows: 1
@@ -176,7 +177,7 @@ writes; instead, the following happens:
    dst[1] = src[3];
    ...
 
-   // dst = { 1, 1, 3, 3, ... };
+   // dst = { 2, 2, 4, 4, ... };
 
 The SCU manual (ST-97-R5-072694) contains this contradictory text:
 
