@@ -1,8 +1,9 @@
-CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wpedantic -Wno-c99-designator -std=c++20
+STATIC = -static -static-libgcc -static-libstdc++
+CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wno-c99-designator -std=c++20
 LDFLAGS =
 
 TARGET =
-CXX = $(TARGET)clang++
+CXX = $(TARGET)g++
 
 SRC = main.cpp
 SRC += lexer.cpp
@@ -14,15 +15,15 @@ SRC += stmt_string.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 DEP = $(patsubst %.cpp,%.d,$(SRC))
 
-all: main
+all: scu-dsp-asm
 
 -include $(DEP)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $(basename $<).d -c $< -o $@
 
-main: $(OBJ)
-	$(CXX) $(LDFLAGS) $^ -o $@
+scu-dsp-asm: $(OBJ)
+	$(CXX) $(STATIC) $(LDFLAGS) $^ -o $@
 
 clean:
 	rm -f *.o *.d *.gch main
