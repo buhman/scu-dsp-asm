@@ -113,17 +113,17 @@ const std::string add_mode_string[] = {
 };
 
 const std::string src_string[] = {
-  [i(src_t::m0)] = "m0",
-  [i(src_t::m1)] = "m1",
-  [i(src_t::m2)] = "m2",
-  [i(src_t::m3)] = "m3"
+  [i(src_t::mc0)] = "mc0",
+  [i(src_t::mc1)] = "mc1",
+  [i(src_t::mc2)] = "mc2",
+  [i(src_t::mc3)] = "mc3"
 };
 
 const std::string dst_string[] = {
-  [i(dst_t::m0 )] = "m0",
-  [i(dst_t::m1 )] = "m1",
-  [i(dst_t::m2 )] = "m2",
-  [i(dst_t::m3 )] = "m3",
+  [i(dst_t::mc0)] = "mc0",
+  [i(dst_t::mc1)] = "mc1",
+  [i(dst_t::mc2)] = "mc2",
+  [i(dst_t::mc3)] = "mc3",
   [i(dst_t::prg)] = "prg",
 };
 

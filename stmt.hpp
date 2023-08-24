@@ -379,10 +379,10 @@ static uint32_t src_bits(src_t src)
   using enum src_t;
 
   switch (src) {
-  case m0 : return 0b000 << 8;
-  case m1 : return 0b001 << 8;
-  case m2 : return 0b010 << 8;
-  case m3 : return 0b011 << 8;
+  case mc0: return 0b000 << 8;
+  case mc1: return 0b001 << 8;
+  case mc2: return 0b010 << 8;
+  case mc3: return 0b011 << 8;
   default: __builtin_unreachable();
   }
 }
@@ -392,10 +392,10 @@ static uint32_t dst_bits(dst_t dst)
   using enum dst_t;
 
   switch (dst) {
-  case m0 : return 0b000 << 8;
-  case m1 : return 0b001 << 8;
-  case m2 : return 0b010 << 8;
-  case m3 : return 0b011 << 8;
+  case mc0: return 0b000 << 8;
+  case mc1: return 0b001 << 8;
+  case mc2: return 0b010 << 8;
+  case mc3: return 0b011 << 8;
   case prg: return 0b100 << 8;
   default: __builtin_unreachable();
   }

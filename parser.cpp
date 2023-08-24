@@ -464,10 +464,10 @@ static dma::add_mode_t dma_add(const token_t& token)
 dma::src_t parser_t::dma_src()
 {
   switch (advance().type) {
-  case _m0: return dma::src_t::m0;
-  case _m1: return dma::src_t::m1;
-  case _m2: return dma::src_t::m2;
-  case _m3: return dma::src_t::m3;
+  case _mc0: return dma::src_t::mc0;
+  case _mc1: return dma::src_t::mc1;
+  case _mc2: return dma::src_t::mc2;
+  case _mc3: return dma::src_t::mc3;
   default:
     throw error(previous(), "expected dma source operand");
   }
@@ -476,10 +476,10 @@ dma::src_t parser_t::dma_src()
 dma::dst_t parser_t::dma_dst()
 {
   switch (advance().type) {
-  case _m0:  return dma::dst_t::m0;
-  case _m1:  return dma::dst_t::m1;
-  case _m2:  return dma::dst_t::m2;
-  case _m3:  return dma::dst_t::m3;
+  case _mc0: return dma::dst_t::mc0;
+  case _mc1: return dma::dst_t::mc1;
+  case _mc2: return dma::dst_t::mc2;
+  case _mc3: return dma::dst_t::mc3;
   case _prg: return dma::dst_t::prg;
   default:
     throw error(previous(), "expected dma destination operand");

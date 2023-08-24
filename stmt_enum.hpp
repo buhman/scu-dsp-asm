@@ -72,11 +72,11 @@ enum struct add_mode_t {
 };
 
 enum struct src_t {
-  m0, m1, m2, m3
+  mc0, mc1, mc2, mc3,
 };
 
 enum struct dst_t {
-  m0, m1, m2, m3,
+  mc0, mc1, mc2, mc3,
   prg,
 };
 

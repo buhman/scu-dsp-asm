@@ -32,34 +32,29 @@ not cover 100% of the possible SCU DSP instructions or arguments.
 Differences that affect source code
 ===================================
 
-MC0-MC3 must not appear in in DMA source/destination arguments
---------------------------------------------------------------
+M0-M3 must not appear in in DMA source/destination arguments
+------------------------------------------------------------
 
 For example, the following are not legal:
 
 .. code::
    
-   DMA D0,MC0,#$02
-   DMA MC1,D0,#$02
+   DMA D0,M0,#$02
+   DMA M1,D0,#$02
 
 Instead, they should be written as:
 
 .. code::
    
-   DMA D0,M0,#$02
-   DMA M1,D0,#$02
+   DMA D0,MC0,#$02
+   DMA MC1,D0,#$02
    
 ``dspasm.exe`` generates the same code given either the former or
 latter example as input. scu-dsp-asm, however, rejects the former
 example as invalid: it misleads what the result of the operation is.
 
-This change is consistent with what is written in the SCU manual
-(ST-97-R5-072694), but is inconsistent with SEGA's SCU DSP examples.
-
-.. note::
-
-   It is currently unclear which of the two is correct. A future
-   version of scu-dsp-asm may change this behavior.
+This change is not consistent with what is written in the SCU manual
+(ST-97-R5-072694).
 
 Differences that affect code generation
 =======================================
