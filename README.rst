@@ -133,7 +133,7 @@ the increment added an offset of RA0/WA0 after each bus transfer:
 
    * - mnemonic
      - D0 → [RAM]
-     - [RAM] →D0
+     - [RAM] → D0
    * - DMA0
      - 0 bytes
      - 0 bytes
@@ -161,6 +161,22 @@ the increment added an offset of RA0/WA0 after each bus transfer:
 
 Note that the DMA transfer length is always decremented by 1 after 4 bytes are
 transferred, regardless of the size of the bus transfer.
+
+Note that selecting DMA1 on a 4-byte bus does not generate misaligned
+writes; instead, the following happens:
+
+.. code:: c
+
+   uint32_t src[] = { 1, 2, 3, 4, ... };
+   extern uint32_t dst[];
+   
+   dst[0] = src[0];
+   dst[0] = src[1];
+   dst[1] = src[2];
+   dst[1] = src[3];
+   ...
+
+   // dst = { 1, 1, 3, 3, ... };
 
 The SCU manual (ST-97-R5-072694) contains this contradictory text:
 
