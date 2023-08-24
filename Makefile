@@ -15,18 +15,20 @@ SRC += stmt_string.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 DEP = $(patsubst %.cpp,%.d,$(SRC))
 
-all: scu-dsp-asm
+MAIN = scu-dsp-asm
+
+all: $(MAIN)
 
 -include $(DEP)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $(basename $<).d -c $< -o $@
 
-scu-dsp-asm: $(OBJ)
+$(MAIN): $(OBJ)
 	$(CXX) $(STATIC) $(LDFLAGS) $^ -o $@
 
 clean:
-	rm -f *.o *.d *.gch main
+	rm -f *.o *.d *.gch $(MAIN)
 
 .SUFFIXES:
 .INTERMEDIATE:

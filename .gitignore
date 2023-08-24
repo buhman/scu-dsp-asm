@@ -4,3 +4,5 @@ scu-dsp-asm
 *.gch
 *.d
 test/*.s
+test/*.txt
+*.bin

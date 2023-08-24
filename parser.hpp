@@ -38,6 +38,7 @@ struct parser_t
   template <typename... Targs>
   bool match(enum token_t::type_t token_type, Targs... args);
   token_t consume(enum token_t::type_t token_type, const std::string error_message);
+  expr_t * immediate();
 
   expr_t * expression();
   expr_t * term();

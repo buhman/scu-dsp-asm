@@ -70,6 +70,14 @@ token_t parser_t::consume(enum token_t::type_t token_type, const std::string err
   throw error(peek(), error_message);
 }
 
+expr_t * parser_t::immediate()
+{
+  match(hash); // optionally consume a hash
+  expr_t * expr = expression();
+  match(colon); // optionally consume a colon
+  return expr;
+}
+
 expr_t * parser_t::expression()
 {
   return term();
@@ -272,8 +280,7 @@ std::optional<op::op_t *> parser_t::xyd1_bus()
       else
 	throw error(peek(), "expected x-bus, y-bus, or d-bus destination operand");
     } else {
-      match(hash); // optionally consume a hash
-      uimm_t<8> imm = uimm_t<8>(peek(), expression());
+      uimm_t<8> imm = uimm_t<8>(peek(), immediate());
       consume(comma, "expected `,`");
       if (auto dest_o = d1_dest())
 	return {new op::mov_imm_d1_t(imm, *dest_o)};
@@ -362,8 +369,7 @@ std::optional<stmt_t *> parser_t::load()
 {
   if (match(_mvi)) {
     const token_t& expr_token = peek();
-    match(hash); // optionally consume a hash
-    expr_t * expr = expression();
+    expr_t * expr = immediate();
     consume(comma, "expected `,`");
     load::dest_t dest = parser_t::load_dest();
     if (match(comma)) {
@@ -508,8 +514,7 @@ std::optional<stmt_t *> parser_t::dma()
       if (auto length_ram_o = dma_length_ram()) {
 	return {new dma::d0_dst_ram_t(hold, add, dst, *length_ram_o)};
       } else {
-        match(hash); // optionally consume a hash
-	uimm_t<8> imm = uimm_t<8>(peek(), expression());
+	uimm_t<8> imm = uimm_t<8>(peek(), immediate());
 	return {new dma::d0_dst_imm_t(hold, add, dst, imm)};
       }
     } else {
@@ -520,8 +525,7 @@ std::optional<stmt_t *> parser_t::dma()
       if (auto length_ram_o = dma_length_ram()) {
 	return {new dma::src_d0_ram_t(hold, add, src, *length_ram_o)};
       } else {
-        match(hash); // optionally consume a hash
-	uimm_t<8> imm = uimm_t<8>(peek(), expression());
+	uimm_t<8> imm = uimm_t<8>(peek(), immediate());
 	return {new dma::src_d0_imm_t(hold, add, src, imm)};
       }
     }
@@ -551,12 +555,10 @@ std::optional<stmt_t *> parser_t::jump()
   if (match(_jmp)) {
     if (auto cond_o = jump_cond()) {
       consume(comma, "expected `,` after jump condition");
-      match(hash); // optionally consume a hash
-      uimm_t<8> imm = uimm_t<8>(peek(), expression());
+      uimm_t<8> imm = uimm_t<8>(peek(), immediate());
       return {new jump::jmp_cond_t(*cond_o, imm)};
     } else {
-      match(hash); // optionally consume a hash
-      uimm_t<8> imm = uimm_t<8>(peek(), expression());
+      uimm_t<8> imm = uimm_t<8>(peek(), immediate());
       return {new jump::jmp_t(imm)};
     }
   } else
