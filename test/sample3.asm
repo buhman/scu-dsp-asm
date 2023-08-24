@@ -19,8 +19,7 @@ RAM2_ADR	= $00		; Address of original array
 ;
 	MVI DATA_TOP,RA0
 	                                                 MOV RAM0_ADR,CT0
-	;; DMA D0,MC0,#$02
-	DMA D0,M0,#$02
+	DMA D0,MC0,#$02
 ;
 ; (Copy of array to be operated from RAM2 to RAM1)
 	                                                 MOV RAM2_ADR,CT2
