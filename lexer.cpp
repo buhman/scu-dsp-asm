@@ -53,6 +53,19 @@ constexpr static N parse_number(const std::string_view s)
   return n;
 }
 
+struct bin_t {
+  constexpr static bool pred(const char c)
+  {
+    return c >= '0' && c <= '1';
+  }
+
+  template <typename N>
+  constexpr static N parse(const std::string_view s)
+  {
+    return parse_number<N, 2>(s);
+  }
+};
+
 struct dec_t {
   constexpr static bool pred(const char c)
   {
@@ -159,7 +172,6 @@ std::optional<token_t> lexer_t::lex_token()
     case '-': return {{pos, minus, lexeme()}};
     case '*': return {{pos, star, lexeme()}};
     case '/': return {{pos, slash, lexeme()}};
-    case '%': return {{pos, percent, lexeme()}};
     case '~': return {{pos, tilde, lexeme()}};
     case '&': return {{pos, ampersand, lexeme()}};
     case '|': return {{pos, bar, lexeme()}};
@@ -188,6 +200,13 @@ std::optional<token_t> lexer_t::lex_token()
 	return {{tmp, eol, lexeme()}};
       }
       break;
+    case '%':
+      if (bin_t::pred(peek())) {
+	start_ix += 1;
+	return {_number<bin_t>()};
+      } else {
+        return {{pos, percent, lexeme()}};
+      }
     case '$':
       if (hex_t::pred(peek())) {
 	start_ix += 1;
@@ -199,6 +218,11 @@ std::optional<token_t> lexer_t::lex_token()
 	if (hex_t::pred(peek())) {
 	  start_ix += 2;
 	  return {_number<hex_t>()};
+	}
+      } else if (match('b')) {
+	if (bin_t::pred(peek())) {
+	  start_ix += 2;
+	  return {_number<bin_t>()};
 	}
       }
       [[fallthrough]];

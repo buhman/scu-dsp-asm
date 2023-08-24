@@ -6,12 +6,19 @@ unary          → ( "~" | "+" | "-" ) unary
 shift          → andl ( ( "<<" | ">>" ) andl )*
 andl           → orl ( "&" orl )*
 orl            → andl ( ( "|" | "^" ) andl )*
-primary        → NUMBER
+primary        → number
                | "(" expression ")"
 
-uimm8  → expression
-uimm19 → expression
-uimm25 → expression
+number → "%" base2-number
+       | "$" base16-number
+       | "0b" base2-number
+       | "0x" base16-number
+       | base10-number
+
+imm → ("#")? expression
+uimm8  → imm
+uimm19 → imm
+uimm25 → imm
 
 alu → and | or | xor | add | sub | ad2 | sr | rr | sl | rl | rl8
 
