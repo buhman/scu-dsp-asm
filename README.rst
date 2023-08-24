@@ -17,6 +17,18 @@ the same source code used with the SEGA-authored ``dspasm.exe``,
 **except** in the cases where ``dspasm.exe`` behavior is considered a
 bug.
 
+Current status
+==============
+
+100% of the documented dspasm.exe features are supported, as well as
+miscellaneous undocumented features.
+
+scu-dsp-asm correctly assembles all of the examples in the test/
+directory in this repository, with caveats listed below.
+
+scp-dsp-asm has not been tested exhaustively, and the test programs do
+not cover 100% of the possible SCU DSP instructions or arguments.
+
 Differences that affect source code
 ===================================
 

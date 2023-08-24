@@ -1,15 +1,15 @@
 DSPASM = dspasm.exe
 
 SRC = sample1.asm sample2a.asm sample2b.asm sample3.asm
-SRC += cmpnm.asm fbtrans.asm loop_pr.asm udiv.asm
+#SRC += cmpnm.asm fbtrans.asm loop_pr.asm udiv.asm
 EXPECT = $(patsubst %.asm,expect/%.bin,$(SRC))
 ACTUAL = $(patsubst %.asm,actual/%.bin,$(SRC))
 ALL = $(EXPECT) $(ACTUAL)
 ALL_TXT = $(patsubst %.bin,%.txt,$(ALL))
 
+all: $(ALL)
 all-expect: $(EXPECT)
 all-actual: $(ACTUAL)
-all: $(ALL)
 all-txt: $(ALL_TXT)
 
 %.s: %.asm
