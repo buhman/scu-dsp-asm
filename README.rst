@@ -56,6 +56,11 @@ example as invalid: it misleads what the result of the operation is.
 This change is consistent with what is written in the SCU manual
 (ST-97-R5-072694), but is inconsistent with SEGA's SCU DSP examples.
 
+.. note::
+
+   It is currently unclear which of the two is correct. A future
+   version of scu-dsp-asm may change this behavior.
+
 Differences that affect code generation
 =======================================
 
@@ -85,8 +90,8 @@ In short:
 Spurious invalid X-bus opcode generation
 ----------------------------------------
 
-Under seemly-random circumstances, ``dspasm.exe`` emits the undefined
-X-bus opcode ``001``. Given:
+Under seemingly-random circumstances, ``dspasm.exe`` emits the
+undefined X-bus opcode ``001``. Given:
 
 .. code::
    
