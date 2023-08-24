@@ -7,6 +7,8 @@ ACTUAL = $(patsubst %.asm,actual/%.bin,$(SRC))
 ALL = $(EXPECT) $(ACTUAL)
 ALL_TXT = $(patsubst %.bin,%.txt,$(ALL))
 
+all-expect: $(EXPECT)
+all-actual: $(ACTUAL)
 all: $(ALL)
 all-txt: $(ALL_TXT)
 
@@ -35,7 +37,7 @@ expect/%.bin: %.s
 
 actual/%.bin: %.asm
 	@mkdir -p $(dir $@)
-	../main $< $@
+	../scu-dsp-asm $< $@
 
 clean:
 	rm -f expect/*.{bin,txt} actual/*.{bin,txt} *.s
