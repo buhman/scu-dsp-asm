@@ -84,8 +84,14 @@ In short:
   mnemonic
 
 - scu-dsp-asm assembles ``DMA`` as the equivalent of the ``DMA1``
-  mnemonic, which is the correct behavior as originally intended by
-  SEGA.
+
+.. note::
+
+   It is unclear which of these is correct. A future version of
+   scu-dsp-asm may change this behavior.
+
+   The documentation, dspasm.exe, and the real SCU DSP are each
+   representing this in a mutually inconsistent way.
 
 Spurious invalid X-bus opcode generation
 ----------------------------------------
