@@ -64,7 +64,7 @@ DMA default "add mode"
 
 ``dspasm.exe`` has a bug where, despite the SCU manual
 (ST-97-R5-072694) claiming that the default DMA "add mode" is ``1``,
-the generated code is add mode ``2``.
+the generated code is "add mode" ``2``.
 
 This bug is documented in "Sega Developers Conference Conference
 Proceedings March 5 7, 1996" on pdf page 48, printed page 3-14,
@@ -82,8 +82,8 @@ In short:
   mnemonic, which is the correct behavior as originally intended by
   SEGA.
 
-Spurious invalid X-bus opcodes generation
------------------------------------------
+Spurious invalid X-bus opcode generation
+----------------------------------------
 
 Under seemly-random circumstances, ``dspasm.exe`` emits the undefined
 X-bus opcode ``001``. Given:
