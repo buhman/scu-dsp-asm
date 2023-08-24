@@ -166,6 +166,7 @@ std::optional<token_t> lexer_t::lex_token()
     case '^': return {{pos, carot, lexeme()}};
     case '=': return {{pos, equal, lexeme()}};
     case ':': return {{pos, colon, lexeme()}};
+    case '#': return {{pos, hash, lexeme()}};
     case '<':
       if (match('<')) return {{pos, left_shift, lexeme()}};
       break;

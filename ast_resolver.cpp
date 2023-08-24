@@ -174,10 +174,10 @@ void resolver_t::visit(const assign_t * assign) const
 
 void resolver_t::visit(const label_t * label) const
 {
-  if (addresses.contains(label->name.lexeme)) {
+  if (variables.contains(label->name.lexeme)) {
     throw std::runtime_error("label redefinition is not allowed");
   } else {
-    addresses.insert({label->name.lexeme, pc.value});
+    variables.insert({label->name.lexeme, pc.value});
   }
 }
 

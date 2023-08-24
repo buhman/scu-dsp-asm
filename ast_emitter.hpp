@@ -22,11 +22,10 @@ struct emitter_error_t : std::runtime_error
 
 struct emitter_t : visitor_t<uint32_t>
 {
-  emitter_t(variables_t& variables, const addresses_t& addresses)
-    : variables(variables), addresses(addresses) {}
+  emitter_t(variables_t& variables)
+    : variables(variables) {}
 
   variables_t& variables;
-  const addresses_t& addresses;
 
   uint32_t visit(const binary_t * binary) const;
   uint32_t visit(const grouping_t * grouping) const;

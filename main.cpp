@@ -40,15 +40,14 @@ static void run(std::ostream& os, std::string source)
   parser_t pass2(tokens);
   ast::printer_t printer(std::cout);
   ast::pc_t pc;
-  ast::addresses_t addresses;
-  ast::resolver_t resolver(pc, addresses);
+  ast::variables_t variables;
+  ast::resolver_t resolver(pc, variables);
   while (auto stmt_o = pass1.statement()) {
     (*stmt_o)->accept(&printer);
     std::cout << std::endl << std::flush;
     (*stmt_o)->accept(&resolver);
   }
-  ast::variables_t variables;
-  ast::emitter_t emitter(variables, addresses);
+  ast::emitter_t emitter(variables);
   while (auto stmt_o = pass2.statement()) {
     uint32_t output = (*stmt_o)->accept(&emitter);
     if (output != 0xffff'ffff) {

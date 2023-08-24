@@ -25,6 +25,7 @@ struct token_t {
 
     comma,
     dot,
+    hash,
 
     // operators
     plus,
@@ -81,6 +82,7 @@ struct token_t {
 
     case comma        : return os << "COMMA";
     case dot          : return os << "DOT";
+    case hash         : return os << "HASH";
 
     // operators
     case plus         : return os << "PLUS";

@@ -40,6 +40,15 @@ struct imm_t {
   static constexpr num_t max = (1L << (bits - static_cast<num_t>(sign))) - 1;
   static constexpr num_t min = sign ? -(max + 1) : 0;
 
+  num_t normalize(num_t value) const
+  {
+    if (!S && value > 2147483648) { // fixme: hack
+      return value & max;
+    } else {
+      return value;
+    }
+  }
+
   bool in_range(num_t value) const
   {
     return value <= max && value >= min;
@@ -257,7 +266,6 @@ struct control_word_t : stmt_accept_t<control_word_t>
   control_word_t(std::vector<const op::op_t *> ops)
     : ops(ops)
   {
-    if (ops.size() == 0) throw std::runtime_error("zero-length ops");
   }
 
   const std::vector<const op_t *> ops;

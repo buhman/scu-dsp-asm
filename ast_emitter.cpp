@@ -131,7 +131,7 @@ uint32_t emitter_t::visit(const op::mov_ram_a_t * mov_ram_a) const
 
 uint32_t emitter_t::visit(const op::mov_imm_d1_t * mov_imm_d1) const
 {
-  num_t value = mov_imm_d1->imm.expr->accept(this);
+  num_t value = mov_imm_d1->imm.normalize(mov_imm_d1->imm.expr->accept(this));
   if (mov_imm_d1->imm.in_range(value))
     return mov_imm_d1->code() | mov_imm_d1->bits() | value;
   else
@@ -152,7 +152,7 @@ uint32_t emitter_t::visit(const op::control_word_t * control_word) const
 
 uint32_t emitter_t::visit(const load::mvi_t * mvi) const
 {
-  num_t value = mvi->imm.expr->accept(this);
+  num_t value = mvi->imm.normalize(mvi->imm.expr->accept(this));
   if (mvi->imm.in_range(value))
     return mvi->code() | mvi->bits() | value;
   else
@@ -161,7 +161,7 @@ uint32_t emitter_t::visit(const load::mvi_t * mvi) const
 
 uint32_t emitter_t::visit(const load::mvi_cond_t * mvi_cond) const
 {
-  num_t value = mvi_cond->imm.expr->accept(this);
+  num_t value = mvi_cond->imm.normalize(mvi_cond->imm.expr->accept(this));
   if (mvi_cond->imm.in_range(value))
     return mvi_cond->code() | mvi_cond->bits() | value;
   else
@@ -170,7 +170,7 @@ uint32_t emitter_t::visit(const load::mvi_cond_t * mvi_cond) const
 
 uint32_t emitter_t::visit(const dma::src_d0_imm_t * src_d0_imm) const
 {
-  num_t value = src_d0_imm->imm.expr->accept(this);
+  num_t value = src_d0_imm->imm.normalize(src_d0_imm->imm.expr->accept(this));
   if (src_d0_imm->imm.in_range(value))
     return src_d0_imm->code() | src_d0_imm->bits() | value;
   else
@@ -179,7 +179,7 @@ uint32_t emitter_t::visit(const dma::src_d0_imm_t * src_d0_imm) const
 
 uint32_t emitter_t::visit(const dma::d0_dst_imm_t * d0_dst_imm) const
 {
-  num_t value = d0_dst_imm->imm.expr->accept(this);
+  num_t value = d0_dst_imm->imm.normalize(d0_dst_imm->imm.expr->accept(this));
   if (d0_dst_imm->imm.in_range(value))
     return d0_dst_imm->code() | d0_dst_imm->bits() | value;
   else
@@ -198,7 +198,7 @@ uint32_t emitter_t::visit(const dma::d0_dst_ram_t * d0_dst_ram) const
 
 uint32_t emitter_t::visit(const jump::jmp_t * jmp) const
 {
-  num_t value = jmp->imm.expr->accept(this);
+  num_t value = jmp->imm.normalize(jmp->imm.expr->accept(this));
   if (jmp->imm.in_range(value))
     return jmp->code() | jmp->bits() | value;
   else
@@ -207,7 +207,7 @@ uint32_t emitter_t::visit(const jump::jmp_t * jmp) const
 
 uint32_t emitter_t::visit(const jump::jmp_cond_t * jmp_cond) const
 {
-  num_t value = jmp_cond->imm.expr->accept(this);
+  num_t value = jmp_cond->imm.normalize(jmp_cond->imm.expr->accept(this));
   if (jmp_cond->imm.in_range(value))
     return jmp_cond->code() | jmp_cond->bits() | value;
   else

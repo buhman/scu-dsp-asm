@@ -25,11 +25,11 @@ struct pc_t
 
 struct resolver_t : visitor_t<void>
 {
-  resolver_t(pc_t& pc, addresses_t& addresses)
-    : pc(pc), addresses(addresses) {}
+  resolver_t(pc_t& pc, variables_t& variables)
+    : pc(pc), variables(variables) {}
 
   pc_t& pc;
-  addresses_t& addresses;
+  variables_t& variables;
 
   void visit(const binary_t * binary) const;
   void visit(const grouping_t * grouping) const;

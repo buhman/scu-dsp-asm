@@ -31,6 +31,11 @@ const token_t& parser_t::peek()
   return tokens[current_ix];
 }
 
+const token_t& parser_t::peek(int n)
+{
+  return tokens[current_ix + n];
+}
+
 const token_t& parser_t::advance()
 {
   if (!at_end_p()) current_ix++;
@@ -267,6 +272,7 @@ std::optional<op::op_t *> parser_t::xyd1_bus()
       else
 	throw error(peek(), "expected x-bus, y-bus, or d-bus destination operand");
     } else {
+      match(hash); // optionally consume a hash
       uimm_t<8> imm = uimm_t<8>(peek(), expression());
       consume(comma, "expected `,`");
       if (auto dest_o = d1_dest())
@@ -284,6 +290,7 @@ std::optional<op::op_t *> parser_t::xyd1_bus()
 
 std::optional<stmt_t *> parser_t::op()
 {
+  bool saw_nop = false;
   std::vector<const op::op_t *> ops;
   std::vector<const token_t *> tokens;
 
@@ -302,11 +309,12 @@ std::optional<stmt_t *> parser_t::op()
   while (true) {
     // fixme: check for emplacement here
     const token_t& token = peek();
-    if      (auto op_o = alu()     ) emplace_op(token, *op_o);
+    if      (match(_nop))            saw_nop = 1;
+    else if (auto op_o = alu()     ) emplace_op(token, *op_o);
     else if (auto op_o = xyd1_bus()) emplace_op(token, *op_o);
     else                               break;
   }
-  if (ops.size() != 0)
+  if (ops.size() != 0 || saw_nop)
     return {new op::control_word_t(ops)};
   else
     return {};
@@ -354,6 +362,7 @@ std::optional<stmt_t *> parser_t::load()
 {
   if (match(_mvi)) {
     const token_t& expr_token = peek();
+    match(hash); // optionally consume a hash
     expr_t * expr = expression();
     consume(comma, "expected `,`");
     load::dest_t dest = parser_t::load_dest();
@@ -499,6 +508,7 @@ std::optional<stmt_t *> parser_t::dma()
       if (auto length_ram_o = dma_length_ram()) {
 	return {new dma::d0_dst_ram_t(hold, add, dst, *length_ram_o)};
       } else {
+        match(hash); // optionally consume a hash
 	uimm_t<8> imm = uimm_t<8>(peek(), expression());
 	return {new dma::d0_dst_imm_t(hold, add, dst, imm)};
       }
@@ -510,6 +520,7 @@ std::optional<stmt_t *> parser_t::dma()
       if (auto length_ram_o = dma_length_ram()) {
 	return {new dma::src_d0_ram_t(hold, add, src, *length_ram_o)};
       } else {
+        match(hash); // optionally consume a hash
 	uimm_t<8> imm = uimm_t<8>(peek(), expression());
 	return {new dma::src_d0_imm_t(hold, add, src, imm)};
       }
@@ -540,9 +551,11 @@ std::optional<stmt_t *> parser_t::jump()
   if (match(_jmp)) {
     if (auto cond_o = jump_cond()) {
       consume(comma, "expected `,` after jump condition");
+      match(hash); // optionally consume a hash
       uimm_t<8> imm = uimm_t<8>(peek(), expression());
       return {new jump::jmp_cond_t(*cond_o, imm)};
     } else {
+      match(hash); // optionally consume a hash
       uimm_t<8> imm = uimm_t<8>(peek(), expression());
       return {new jump::jmp_t(imm)};
     }
@@ -566,8 +579,7 @@ std::optional<stmt_t *> parser_t::end()
 
 std::optional<stmt_t *> parser_t::instruction()
 {
-  if      (match(_nop))          return {new nop::nop_t()};
-  else if (auto op_o = op())     return op_o;
+  if      (auto op_o = op())     return op_o;
   else if (auto load_o = load()) return load_o;
   else if (auto dma_o = dma())   return dma_o;
   else if (auto jump_o = jump()) return jump_o;

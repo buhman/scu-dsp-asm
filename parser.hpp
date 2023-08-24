@@ -31,6 +31,7 @@ struct parser_t
 
   const token_t& previous();
   const token_t& peek();
+  const token_t& peek(int n);
   const token_t& advance();
   bool check(enum token_t::type_t token_type);
   bool match(enum token_t::type_t token_type);

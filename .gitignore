@@ -2,3 +2,4 @@ main
 *.o
 *.gch
 *.d
+test/*.s
