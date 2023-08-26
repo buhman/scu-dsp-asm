@@ -27,7 +27,7 @@ uimm8  → imm
 uimm19 → imm
 uimm25 → imm
 
-alu → and | or | xor | add | sub | ad2 | sr | rr | sl | rl | rl8
+alu → "and" | "or" | "xor" | "add" | "sub" | "ad2" | "sr" | "rr" | "sl" | "rl" | "rl8"
 
 xy_src → "m0"  | "m1"  | "m2"  | "m3"
        | "mc0" | "mc1" | "mc2" | "mc3"
