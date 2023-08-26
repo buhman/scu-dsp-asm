@@ -12,11 +12,15 @@ primary        → number
 
 identifier → ( [a-z][A-Z][0-9][_] ) +
 
-number → "%" base2-number
-       | "$" base16-number
-       | "0b" base2-number
-       | "0x" base16-number
-       | base10-number
+base2_number → ( [0-1] ) +
+base10_number → ( [0-9] ) +
+base16_number → ( [0-9][A-F][a-f] ) +
+
+number → "%" base2_number
+       | "$" base16_number
+       | "0b" base2_number
+       | "0x" base16_number
+       | base10_number
 
 imm → ("#")? expression (":")?
 uimm8  → imm
