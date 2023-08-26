@@ -22,8 +22,8 @@ uimm25 → imm
 
 alu → and | or | xor | add | sub | ad2 | sr | rr | sl | rl | rl8
 
-xy_src → "mc0" | "mc1" | "mc2" | "mc3"
-       | "m0"  | "m1"  | "m2"  | "m3"
+xy_src → "m0"  | "m1"  | "m2"  | "m3"
+       | "mc0" | "mc1" | "mc2" | "mc3"
 
 mov_ram_x → "mov" xy_src  "," "x"
 mov_mul_p → "mov" "mul"   "," "p"
@@ -38,13 +38,14 @@ mov_ram_a → "mov" xy_src  "," "a"
 
 y_bus → mov_ram_y | clr_a | mpv_alu_a | mov_ram_a
 
-d1_dest → "rx"  | "pl"
+d1_dest → "mc0" | "mc1" | "mc2" | "mc3"
+        | "rx"  | "pl"
         | "ra0" | "wa0"
         | "lop" | "top"
         | "ct0" | "ct1" | "ct2" | "ct3"
 
-d1_src → "mc0" | "mc1" | "mc2" | "mc3"
-       | "m0"  | "m1"  | "m2"  | "m3"
+d1_src → "m0"  | "m1"  | "m2"  | "m3"
+       | "mc0" | "mc1" | "mc2" | "mc3"
        | "alh" | "all"
 
 mov_imm_d1 → "mov" uimm8  "," d1_dest
@@ -72,10 +73,10 @@ mvi_cond → "mvi" uimm19 load_dest load_cond
 
 load → mvi | mvi_cond
 
-dma_ingress → "m0" | "m1" | "m2" | "m3"
-            | "prg"
+dma_dst → "m0" | "m1" | "m2" | "m3"
+        | "prg"
 
-dma_egress  → "m0" | "m1" | "m2" | "m3"
+dma_src → "m0" | "m1" | "m2" | "m3"
 
 add_mode = "0" | "1" | "2" | "4" | "8" | "16" | "32" | "64"
 
@@ -84,12 +85,13 @@ dma_dmah → ("dma" | "dmah") add_mode?
 dma_length_ram → "m0"  | "m1"  | "m2"  | "m3"
                | "mc0" | "mc1" | "mc2" | "mc3"
 
-dma_ingress_imm → dma_dmah "d0"       "," dma_ingress "," uimm8
-dma_egress_imm  → dma_dmah dma_egress "," "d0"        "," uimm8
-dma_ingress_ram → dma_dmah "d0"       "," dma_ingress "," dma_length_ram
-dma_egress_ram  → dma_dmah dma_egress "," "d0"        "," dma_length_ram
+dma_d0_dst_imm → dma_dmah "d0"    "," dma_dst "," uimm8
+dma_src_d0_imm → dma_dmah dma_src "," "d0"    "," uimm8
+dma_d0_dst_ram → dma_dmah "d0"    "," dma_dst "," dma_length_ram
+dma_src_d0_ram → dma_dmah dma_src "," "d0"    "," dma_length_ram
 
-dma → dma_ingress_imm | dma_egress_imm | dma_ingress_ram | dma_egress_ram
+dma → dma_d0_dst_imm | dma_src_d0_imm
+    | dma_d0_dst_ram | dma_src_d0_ram
 
 jump_cond → "z"  | "nz"
           | "s"  | "ns"
@@ -98,7 +100,7 @@ jump_cond → "z"  | "nz"
           | "zs" | "nzs"
 
 jmp      → "jmp" uimm8
-jmp_cond → "jmp" jump_cond
+jmp_cond → "jmp" jump_cond uimm8
 
 jump → jmp | jmp_cond
 
