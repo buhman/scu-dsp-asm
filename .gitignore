@@ -1,5 +1,7 @@
 main
 scu-dsp-asm
+scu-dsp-asm.*
+.~*
 *.o
 *.gch
 *.d
