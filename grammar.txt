@@ -117,11 +117,13 @@ instruction → op
 
 eq → "=" | "equ"
 
-assignment_statement → identifier eq expression "\n"
+newline → "\n" | "\r\n"
+
+assignment_statement → identifier eq expression newline
 
 label → identifier ":"
 
-instruction_statement → label? instruction? "\n"
+instruction_statement → label? instruction? newline
 
 statement → assignment_statement
           | instruction_statement
