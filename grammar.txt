@@ -7,7 +7,10 @@ shift          → andl ( ( "<<" | ">>" ) andl )*
 andl           → orl ( "&" orl )*
 orl            → andl ( ( "|" | "^" ) andl )*
 primary        → number
+	       → identifier
                | "(" expression ")"
+
+identifier → ( [a-z][A-Z][0-9][_] ) +
 
 number → "%" base2-number
        | "$" base16-number
