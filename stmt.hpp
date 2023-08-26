@@ -64,9 +64,6 @@ using uimm_t = imm_t<false, N>;
 
 namespace op {
 
-static uint32_t op_mask(uint32_t mask) { return (0b11 << 30) | mask; }
-static uint32_t op_code(uint32_t code) { return (0b00 << 30) | code; }
-
 struct op_t
 {
   virtual uint32_t mask() const = 0;
@@ -81,9 +78,9 @@ struct alu_t : op_t, stmt_accept_t<alu_t>
 
   const alu_type_t type;
 
-  uint32_t mask() const { return op_mask(0b1111 << 26); }
-  uint32_t code() const { return op_code(0b0000 << 26); }
-  uint32_t bits() const { return alu_bits(type);        }
+  uint32_t mask() const { return 0b1111 << 26;   }
+  uint32_t code() const { return 0b0000 << 26;   }
+  uint32_t bits() const { return alu_bits(type); }
 };
 
 struct mov_ram_x_t : op_t, stmt_accept_t<mov_ram_x_t>
@@ -93,18 +90,18 @@ struct mov_ram_x_t : op_t, stmt_accept_t<mov_ram_x_t>
 
   const xy_src_t src;
 
-  uint32_t mask() const { return op_mask(0b100'111 << 20); }
-  uint32_t code() const { return op_code(0b100'000 << 20); }
-  uint32_t bits() const { return xy_src_bits(src, 20);     }
+  uint32_t mask() const { return 0b100'111 << 20;      }
+  uint32_t code() const { return 0b100'000 << 20;      }
+  uint32_t bits() const { return xy_src_bits(src, 20); }
 };
 
 struct mov_mul_p_t : op_t, stmt_accept_t<mov_mul_p_t>
 {
   mov_mul_p_t() {}
 
-  uint32_t mask() const { return op_mask(0b011'000 << 20); }
-  uint32_t code() const { return op_code(0b010'000 << 20); }
-  uint32_t bits() const { return 0;                        }
+  uint32_t mask() const { return 0b011'000 << 20; }
+  uint32_t code() const { return 0b010'000 << 20; }
+  uint32_t bits() const { return 0;               }
 };
 
 struct mov_ram_p_t : op_t, stmt_accept_t<mov_ram_p_t>
@@ -114,9 +111,9 @@ struct mov_ram_p_t : op_t, stmt_accept_t<mov_ram_p_t>
 
   const xy_src_t src;
 
-  uint32_t mask() const { return op_mask(0b011'111 << 20); }
-  uint32_t code() const { return op_code(0b011'000 << 20); }
-  uint32_t bits() const { return xy_src_bits(src, 20);     }
+  uint32_t mask() const { return 0b011'111 << 20;      }
+  uint32_t code() const { return 0b011'000 << 20;      }
+  uint32_t bits() const { return xy_src_bits(src, 20); }
 };
 
 struct mov_ram_y_t : op_t, stmt_accept_t<mov_ram_y_t>
@@ -126,27 +123,27 @@ struct mov_ram_y_t : op_t, stmt_accept_t<mov_ram_y_t>
 
   const xy_src_t src;
 
-  uint32_t mask() const { return op_mask(0b100'111 << 14); }
-  uint32_t code() const { return op_code(0b100'000 << 14); }
-  uint32_t bits() const { return xy_src_bits(src, 14);     }
+  uint32_t mask() const { return 0b100'111 << 14;      }
+  uint32_t code() const { return 0b100'000 << 14;      }
+  uint32_t bits() const { return xy_src_bits(src, 14); }
 };
 
 struct clr_a_t : op_t, stmt_accept_t<clr_a_t>
 {
   clr_a_t() {}
 
-  uint32_t mask() const { return op_mask(0b011'000 << 14); }
-  uint32_t code() const { return op_code(0b001'000 << 14); }
-  uint32_t bits() const { return 0;                        }
+  uint32_t mask() const { return 0b011'000 << 14; }
+  uint32_t code() const { return 0b001'000 << 14; }
+  uint32_t bits() const { return 0;               }
 };
 
 struct mov_alu_a_t : op_t, stmt_accept_t<mov_alu_a_t>
 {
   mov_alu_a_t() {}
 
-  uint32_t mask() const { return op_mask(0b011'000 << 14); }
-  uint32_t code() const { return op_code(0b010'000 << 14); }
-  uint32_t bits() const { return 0;                        }
+  uint32_t mask() const { return 0b011'000 << 14; }
+  uint32_t code() const { return 0b010'000 << 14; }
+  uint32_t bits() const { return 0;               }
 };
 
 struct mov_ram_a_t : op_t, stmt_accept_t<mov_ram_a_t>
@@ -156,9 +153,9 @@ struct mov_ram_a_t : op_t, stmt_accept_t<mov_ram_a_t>
 
   const xy_src_t src;
 
-  uint32_t mask() const { return op_mask(0b011'111 << 14); }
-  uint32_t code() const { return op_code(0b011'000 << 14); }
-  uint32_t bits() const { return xy_src_bits(src, 14);     }
+  uint32_t mask() const { return 0b011'111 << 14;      }
+  uint32_t code() const { return 0b011'000 << 14;      }
+  uint32_t bits() const { return xy_src_bits(src, 14); }
 };
 
 struct mov_imm_d1_t : op_t, stmt_accept_t<mov_imm_d1_t>
@@ -169,9 +166,9 @@ struct mov_imm_d1_t : op_t, stmt_accept_t<mov_imm_d1_t>
   const uimm_t<8> imm;
   const d1_dest_t dest;
 
-  uint32_t mask() const { return op_mask(0b11'1111'1111'1111 << 0); }
-  uint32_t code() const { return op_code(0b01'0000'0000'0000 << 0); }
-  uint32_t bits() const { return d1_dest_bits(dest);                }
+  uint32_t mask() const { return 0b11'1111'1111'1111 << 0; }
+  uint32_t code() const { return 0b01'0000'0000'0000 << 0; }
+  uint32_t bits() const { return d1_dest_bits(dest);       }
 };
 
 struct mov_ram_d1_t : op_t, stmt_accept_t<mov_ram_d1_t>
@@ -182,8 +179,8 @@ struct mov_ram_d1_t : op_t, stmt_accept_t<mov_ram_d1_t>
   const d1_src_t src;
   const d1_dest_t dest;
 
-  uint32_t mask() const { return op_mask(0b11'1111'0000'1111 << 0);     }
-  uint32_t code() const { return op_code(0b11'0000'0000'0000 << 0);     }
+  uint32_t mask() const { return 0b11'1111'0000'1111 << 0;              }
+  uint32_t code() const { return 0b11'0000'0000'0000 << 0;              }
   uint32_t bits() const { return d1_dest_bits(dest) | d1_src_bits(src); }
 };
 
@@ -196,9 +193,9 @@ struct control_word_t : stmt_accept_t<control_word_t>
 
   const std::vector<const op_t *> ops;
 
-  uint32_t mask() const { return 0xffff'ffff;  }
-  uint32_t code() const { return 0;            }
-  uint32_t bits() const { return 0;            }
+  uint32_t mask() const { return 0b11 << 30; }
+  uint32_t code() const { return 0b00 << 30; }
+  uint32_t bits() const { return 0;          }
 };
 
 } // op

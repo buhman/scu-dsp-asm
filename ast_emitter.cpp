@@ -145,7 +145,7 @@ uint32_t emitter_t::visit(const op::mov_ram_d1_t * mov_ram_d1) const
 
 uint32_t emitter_t::visit(const op::control_word_t * control_word) const
 {
-  uint32_t word = 0;
+  uint32_t word = control_word->code() | control_word->bits();
   for (auto& op : control_word->ops) { word |= dynamic_cast<const stmt_t *>(op)->accept(this); }
   return word;
 }
