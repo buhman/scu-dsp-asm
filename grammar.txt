@@ -15,7 +15,7 @@ number → "%" base2-number
        | "0x" base16-number
        | base10-number
 
-imm → ("#")? expression
+imm → ("#")? expression (":")?
 uimm8  → imm
 uimm19 → imm
 uimm25 → imm
