@@ -115,7 +115,9 @@ instruction → op
 	    | loop
 	    | end
 
-assignment_statement → identifier "=" expression "\n"
+eq → "=" | "equ"
+
+assignment_statement → identifier eq expression "\n"
 
 label → identifier ":"
 
