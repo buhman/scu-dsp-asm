@@ -7,6 +7,8 @@
 #include "visitor.hpp"
 #include "expr.hpp"
 #include "stmt.hpp"
+#include "stmt_ins.hpp"
+#include "control_word.hpp"
 #include "ast.hpp"
 
 namespace dsp {
@@ -33,7 +35,18 @@ struct emitter_t : visitor_t<uint32_t>
   uint32_t visit(const literal_t * literal) const;
   uint32_t visit(const unary_t * unary) const;
 
-  uint32_t visit(const op::alu_t * alu) const;
+  uint32_t visit(const op::andl_t * andl) const;
+  uint32_t visit(const op::orl_t * orl) const;
+  uint32_t visit(const op::xorl_t * xorl) const;
+  uint32_t visit(const op::add_t * add) const;
+  uint32_t visit(const op::sub_t * sub) const;
+  uint32_t visit(const op::ad2_t * ad2) const;
+  uint32_t visit(const op::sr_t * sr) const;
+  uint32_t visit(const op::rr_t * rr) const;
+  uint32_t visit(const op::sl_t * sl) const;
+  uint32_t visit(const op::rl_t * rl) const;
+  uint32_t visit(const op::rl8_t * rl8) const;
+
   uint32_t visit(const op::mov_ram_x_t * mov_ram_x) const;
   uint32_t visit(const op::mov_mul_p_t * mov_mul_p) const;
   uint32_t visit(const op::mov_ram_p_t * mov_ram_p) const;

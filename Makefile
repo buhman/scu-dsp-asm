@@ -3,7 +3,7 @@ CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wno-c99-designator -std=
 LDFLAGS =
 
 TARGET ?=
-CXX = $(TARGET)g++
+CXX = $(TARGET)clang++
 
 SRC = main.cpp
 SRC += lexer.cpp

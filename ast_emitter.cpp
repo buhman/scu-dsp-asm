@@ -89,9 +89,59 @@ uint32_t emitter_t::visit(const unary_t * unary) const
 
 // instructions
 
-uint32_t emitter_t::visit(const op::alu_t * alu) const
+uint32_t emitter_t::visit(const op::andl_t * andl) const
 {
-  return alu->code() | alu->bits();
+  return andl->code() | andl->bits();
+}
+
+uint32_t emitter_t::visit(const op::orl_t * orl) const
+{
+  return orl->code() | orl->bits();
+}
+
+uint32_t emitter_t::visit(const op::xorl_t * xorl) const
+{
+  return xorl->code() | xorl->bits();
+}
+
+uint32_t emitter_t::visit(const op::add_t * add) const
+{
+  return add->code() | add->bits();
+}
+
+uint32_t emitter_t::visit(const op::sub_t * sub) const
+{
+  return sub->code() | sub->bits();
+}
+
+uint32_t emitter_t::visit(const op::ad2_t * ad2) const
+{
+  return ad2->code() | ad2->bits();
+}
+
+uint32_t emitter_t::visit(const op::sr_t * sr) const
+{
+  return sr->code() | sr->bits();
+}
+
+uint32_t emitter_t::visit(const op::rr_t * rr) const
+{
+  return rr->code() | rr->bits();
+}
+
+uint32_t emitter_t::visit(const op::sl_t * sl) const
+{
+  return sl->code() | sl->bits();
+}
+
+uint32_t emitter_t::visit(const op::rl_t * rl) const
+{
+  return rl->code() | rl->bits();
+}
+
+uint32_t emitter_t::visit(const op::rl8_t * rl8) const
+{
+  return rl8->code() | rl8->bits();
 }
 
 uint32_t emitter_t::visit(const op::mov_ram_x_t * mov_ram_x) const
@@ -146,7 +196,9 @@ uint32_t emitter_t::visit(const op::mov_ram_d1_t * mov_ram_d1) const
 uint32_t emitter_t::visit(const op::control_word_t * control_word) const
 {
   uint32_t word = control_word->code() | control_word->bits();
-  for (auto& op : control_word->ops) { word |= dynamic_cast<const stmt_t *>(op)->accept(this); }
+  for (const auto& op : control_word->ops) {
+    word |= std::visit([*this](auto&& arg) -> uint32_t { return (arg).accept(this); }, op);
+  }
   return word;
 }
 

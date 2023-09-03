@@ -37,7 +37,18 @@ struct resolver_t : visitor_t<void>
   void visit(const literal_t * literal) const;
   void visit(const unary_t * unary) const;
 
-  void visit(const op::alu_t * alu) const;
+  void visit(const op::andl_t * andl) const;
+  void visit(const op::orl_t * orl) const;
+  void visit(const op::xorl_t * xorl) const;
+  void visit(const op::add_t * add) const;
+  void visit(const op::sub_t * sub) const;
+  void visit(const op::ad2_t * ad2) const;
+  void visit(const op::sr_t * sr) const;
+  void visit(const op::rr_t * rr) const;
+  void visit(const op::sl_t * sl) const;
+  void visit(const op::rl_t * rl) const;
+  void visit(const op::rl8_t * rl8) const;
+
   void visit(const op::mov_ram_x_t * mov_ram_x) const;
   void visit(const op::mov_mul_p_t * mov_mul_p) const;
   void visit(const op::mov_ram_p_t * mov_ram_p) const;

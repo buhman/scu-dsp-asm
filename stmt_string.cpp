@@ -1,5 +1,5 @@
 #include "stmt_string.hpp"
-#include "stmt_enum.hpp"
+#include "stmt_ins.hpp"
 
 #define i(v) (static_cast<int>(v))
 
@@ -7,46 +7,43 @@ namespace dsp {
 
 namespace op {
 
-const std::string alu_type_string[] = {
-  [i(alu_type_t::andl)] = "andl",
-  [i(alu_type_t::orl )] = "orl",
-  [i(alu_type_t::xorl)] = "xorl",
-  [i(alu_type_t::add )] = "add",
-  [i(alu_type_t::sub )] = "sub",
-  [i(alu_type_t::ad2 )] = "ad2",
-  [i(alu_type_t::sr  )] = "sr",
-  [i(alu_type_t::rr  )] = "rr",
-  [i(alu_type_t::sl  )] = "sl",
-  [i(alu_type_t::rl  )] = "rl",
-  [i(alu_type_t::rl8 )] = "rl8",
+const std::string x_src_string[] = {
+  [i(x_src_t::m0 )] = "m0" ,
+  [i(x_src_t::m1 )] = "m1" ,
+  [i(x_src_t::m2 )] = "m2" ,
+  [i(x_src_t::m3 )] = "m3" ,
+  [i(x_src_t::mc0)] = "mc0",
+  [i(x_src_t::mc1)] = "mc1",
+  [i(x_src_t::mc2)] = "mc2",
+  [i(x_src_t::mc3)] = "mc3",
 };
 
-const std::string xy_src_string[] = {
-  [i(xy_src_t::m0 )] = "m0" ,
-  [i(xy_src_t::m1 )] = "m1" ,
-  [i(xy_src_t::m2 )] = "m2" ,
-  [i(xy_src_t::m3 )] = "m3" ,
-  [i(xy_src_t::mc0)] = "mc0",
-  [i(xy_src_t::mc1)] = "mc1",
-  [i(xy_src_t::mc2)] = "mc2",
-  [i(xy_src_t::mc3)] = "mc3",
+const std::string y_src_string[] = {
+  [i(y_src_t::m0 )] = "m0" ,
+  [i(y_src_t::m1 )] = "m1" ,
+  [i(y_src_t::m2 )] = "m2" ,
+  [i(y_src_t::m3 )] = "m3" ,
+  [i(y_src_t::mc0)] = "mc0",
+  [i(y_src_t::mc1)] = "mc1",
+  [i(y_src_t::mc2)] = "mc2",
+  [i(y_src_t::mc3)] = "mc3",
 };
 
-const std::string d1_dest_string[] = {
-  [i(d1_dest_t::mc0)] = "mc0",
-  [i(d1_dest_t::mc1)] = "mc1",
-  [i(d1_dest_t::mc2)] = "mc2",
-  [i(d1_dest_t::mc3)] = "mc3",
-  [i(d1_dest_t::rx )] = "rx" ,
-  [i(d1_dest_t::pl )] = "pl" ,
-  [i(d1_dest_t::ra0)] = "ra0",
-  [i(d1_dest_t::wa0)] = "wa0",
-  [i(d1_dest_t::lop)] = "lop",
-  [i(d1_dest_t::top)] = "top",
-  [i(d1_dest_t::ct0)] = "ct0",
-  [i(d1_dest_t::ct1)] = "ct1",
-  [i(d1_dest_t::ct2)] = "ct2",
-  [i(d1_dest_t::ct3)] = "ct3",
+const std::string d1_dst_string[] = {
+  [i(d1_dst_t::mc0)] = "mc0",
+  [i(d1_dst_t::mc1)] = "mc1",
+  [i(d1_dst_t::mc2)] = "mc2",
+  [i(d1_dst_t::mc3)] = "mc3",
+  [i(d1_dst_t::rx )] = "rx" ,
+  [i(d1_dst_t::pl )] = "pl" ,
+  [i(d1_dst_t::ra0)] = "ra0",
+  [i(d1_dst_t::wa0)] = "wa0",
+  [i(d1_dst_t::lop)] = "lop",
+  [i(d1_dst_t::top)] = "top",
+  [i(d1_dst_t::ct0)] = "ct0",
+  [i(d1_dst_t::ct1)] = "ct1",
+  [i(d1_dst_t::ct2)] = "ct2",
+  [i(d1_dst_t::ct3)] = "ct3",
 };
 
 const std::string d1_src_string[] = {
@@ -66,17 +63,17 @@ const std::string d1_src_string[] = {
 
 namespace load {
 
-const std::string dest_string[] = {
-  [i(dest_t::mc0)] = "mc0",
-  [i(dest_t::mc1)] = "mc1",
-  [i(dest_t::mc2)] = "mc2",
-  [i(dest_t::mc3)] = "mc3",
-  [i(dest_t::rx )] = "rx" ,
-  [i(dest_t::pl )] = "pl" ,
-  [i(dest_t::ra0)] = "ra0",
-  [i(dest_t::wa0)] = "wa0",
-  [i(dest_t::lop)] = "lop",
-  [i(dest_t::pc )] = "pc" ,
+const std::string dst_string[] = {
+  [i(dst_t::mc0)] = "mc0",
+  [i(dst_t::mc1)] = "mc1",
+  [i(dst_t::mc2)] = "mc2",
+  [i(dst_t::mc3)] = "mc3",
+  [i(dst_t::rx )] = "rx" ,
+  [i(dst_t::pl )] = "pl" ,
+  [i(dst_t::ra0)] = "ra0",
+  [i(dst_t::wa0)] = "wa0",
+  [i(dst_t::lop)] = "lop",
+  [i(dst_t::pc )] = "pc" ,
 };
 
 const std::string cond_string[] = {
@@ -102,14 +99,14 @@ const std::string hold_mode_string[] = {
 };
 
 const std::string add_mode_string[] = {
-  [i(add_mode_t::_0 )] = "0" ,
-  [i(add_mode_t::_1 )] = "1" ,
-  [i(add_mode_t::_2 )] = "2" ,
-  [i(add_mode_t::_4 )] = "4" ,
-  [i(add_mode_t::_8 )] = "8" ,
-  [i(add_mode_t::_16)] = "16",
-  [i(add_mode_t::_32)] = "32",
-  [i(add_mode_t::_64)] = "64",
+  [i(add_t::_0 )] = "0" ,
+  [i(add_t::_1 )] = "1" ,
+  [i(add_t::_2 )] = "2" ,
+  [i(add_t::_4 )] = "4" ,
+  [i(add_t::_8 )] = "8" ,
+  [i(add_t::_16)] = "16",
+  [i(add_t::_32)] = "32",
+  [i(add_t::_64)] = "64",
 };
 
 const std::string src_string[] = {
@@ -128,14 +125,14 @@ const std::string dst_string[] = {
 };
 
 const std::string length_ram_string[] = {
-  [i(length_ram_t::m0 )] = "m0" ,
-  [i(length_ram_t::m1 )] = "m1" ,
-  [i(length_ram_t::m2 )] = "m2" ,
-  [i(length_ram_t::m3 )] = "m3" ,
-  [i(length_ram_t::mc0)] = "mc0",
-  [i(length_ram_t::mc1)] = "mc1",
-  [i(length_ram_t::mc2)] = "mc2",
-  [i(length_ram_t::mc3)] = "mc3",
+  [i(ram_t::m0 )] = "m0" ,
+  [i(ram_t::m1 )] = "m1" ,
+  [i(ram_t::m2 )] = "m2" ,
+  [i(ram_t::m3 )] = "m3" ,
+  [i(ram_t::mc0)] = "mc0",
+  [i(ram_t::mc1)] = "mc1",
+  [i(ram_t::mc2)] = "mc2",
+  [i(ram_t::mc3)] = "mc3",
 };
 
 } // dma

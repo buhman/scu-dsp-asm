@@ -8,3 +8,4 @@ scu-dsp-asm.*
 test/*.s
 test/*.txt
 *.bin
+__pycache__

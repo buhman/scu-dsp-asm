@@ -64,7 +64,9 @@ struct token_t {
   const std::string_view lexeme;
   const literal_t literal;
 
-  token_t() = delete;
+  constexpr token_t()
+    : pos({0, 0}), type(type_t::number), lexeme(""), literal({})
+  { }
 
   constexpr token_t(token_pos_t pos, type_t type, const std::string_view lexeme, num_type number)
     : pos(pos), type(type), lexeme(lexeme), literal(number)

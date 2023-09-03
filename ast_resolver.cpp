@@ -33,9 +33,59 @@ void resolver_t::visit(const unary_t * unary) const
 
 // instructions
 
-void resolver_t::visit(const op::alu_t * alu) const
+void resolver_t::visit(const op::andl_t * andl) const
 {
-  (void)alu;
+  (void)andl;
+}
+
+void resolver_t::visit(const op::orl_t * orl) const
+{
+  (void)orl;
+}
+
+void resolver_t::visit(const op::xorl_t * xorl) const
+{
+  (void)xorl;
+}
+
+void resolver_t::visit(const op::add_t * add) const
+{
+  (void)add;
+}
+
+void resolver_t::visit(const op::sub_t * sub) const
+{
+  (void)sub;
+}
+
+void resolver_t::visit(const op::ad2_t * ad2) const
+{
+  (void)ad2;
+}
+
+void resolver_t::visit(const op::sr_t * sr) const
+{
+  (void)sr;
+}
+
+void resolver_t::visit(const op::rr_t * rr) const
+{
+  (void)rr;
+}
+
+void resolver_t::visit(const op::sl_t * sl) const
+{
+  (void)sl;
+}
+
+void resolver_t::visit(const op::rl_t * rl) const
+{
+  (void)rl;
+}
+
+void resolver_t::visit(const op::rl8_t * rl8) const
+{
+  (void)rl8;
 }
 
 void resolver_t::visit(const op::mov_ram_x_t * mov_ram_x) const

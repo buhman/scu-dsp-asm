@@ -173,21 +173,22 @@ void parser_t::synchronize()
 }
 */
 
-std::optional<op::op_t *> parser_t::alu()
+std::optional<op::op_t> parser_t::alu()
 {
   using namespace dsp::op;
 
-  if      (match(_and)) return {new alu_t(alu_type_t::andl)};
-  else if (match(_or )) return {new alu_t(alu_type_t::orl)};
-  else if (match(_xor)) return {new alu_t(alu_type_t::xorl)};
-  else if (match(_add)) return {new alu_t(alu_type_t::add)};
-  else if (match(_sub)) return {new alu_t(alu_type_t::sub)};
-  else if (match(_ad2)) return {new alu_t(alu_type_t::ad2)};
-  else if (match(_sr )) return {new alu_t(alu_type_t::sr)};
-  else if (match(_rr )) return {new alu_t(alu_type_t::rr)};
-  else if (match(_sl )) return {new alu_t(alu_type_t::sl)};
-  else if (match(_rl )) return {new alu_t(alu_type_t::rl)};
-  else if (match(_rl8)) return {new alu_t(alu_type_t::rl8)};
+
+  if      (match(_and)) return {op_t{std::in_place_type<andl_t>}};
+  else if (match(_or )) return {op_t{std::in_place_type<orl_t>}};
+  else if (match(_xor)) return {op_t{std::in_place_type<xorl_t>}};
+  else if (match(_add)) return {op_t{std::in_place_type<add_t>}};
+  else if (match(_sub)) return {op_t{std::in_place_type<sub_t>}};
+  else if (match(_ad2)) return {op_t{std::in_place_type<ad2_t>}};
+  else if (match(_sr )) return {op_t{std::in_place_type<sr_t>}};
+  else if (match(_rr )) return {op_t{std::in_place_type<rr_t>}};
+  else if (match(_sl )) return {op_t{std::in_place_type<sl_t>}};
+  else if (match(_rl )) return {op_t{std::in_place_type<rl_t>}};
+  else if (match(_rl8)) return {op_t{std::in_place_type<rl8_t>}};
   else                  return {};
 }
 
@@ -199,41 +200,58 @@ bool parser_t::xyd1_src()
   return mc || m || al;
 }
 
-static op::xy_src_t xy_src(const token_t& token)
+static op::x_src_t x_src(const token_t& token)
 {
   using namespace dsp::op;
 
   switch (token.type) {
-  case _m0:  return xy_src_t::m0;
-  case _m1:  return xy_src_t::m1;
-  case _m2:  return xy_src_t::m2;
-  case _m3:  return xy_src_t::m3;
-  case _mc0: return xy_src_t::mc0;
-  case _mc1: return xy_src_t::mc1;
-  case _mc2: return xy_src_t::mc2;
-  case _mc3: return xy_src_t::mc3;
+  case _m0:  return x_src_t::m0;
+  case _m1:  return x_src_t::m1;
+  case _m2:  return x_src_t::m2;
+  case _m3:  return x_src_t::m3;
+  case _mc0: return x_src_t::mc0;
+  case _mc1: return x_src_t::mc1;
+  case _mc2: return x_src_t::mc2;
+  case _mc3: return x_src_t::mc3;
   default: assert(false); __builtin_unreachable();
   }
 }
 
-std::optional<op::d1_dest_t> parser_t::d1_dest()
+static op::y_src_t y_src(const token_t& token)
 {
   using namespace dsp::op;
 
-  if      (match(_mc0)) return {d1_dest_t::mc0};
-  else if (match(_mc1)) return {d1_dest_t::mc1};
-  else if (match(_mc2)) return {d1_dest_t::mc2};
-  else if (match(_mc3)) return {d1_dest_t::mc3};
-  else if (match(_rx))  return {d1_dest_t::rx};
-  else if (match(_pl))  return {d1_dest_t::pl};
-  else if (match(_ra0)) return {d1_dest_t::ra0};
-  else if (match(_wa0)) return {d1_dest_t::wa0};
-  else if (match(_lop)) return {d1_dest_t::lop};
-  else if (match(_top)) return {d1_dest_t::top};
-  else if (match(_ct0)) return {d1_dest_t::ct0};
-  else if (match(_ct1)) return {d1_dest_t::ct1};
-  else if (match(_ct2)) return {d1_dest_t::ct2};
-  else if (match(_ct3)) return {d1_dest_t::ct3};
+  switch (token.type) {
+  case _m0:  return y_src_t::m0;
+  case _m1:  return y_src_t::m1;
+  case _m2:  return y_src_t::m2;
+  case _m3:  return y_src_t::m3;
+  case _mc0: return y_src_t::mc0;
+  case _mc1: return y_src_t::mc1;
+  case _mc2: return y_src_t::mc2;
+  case _mc3: return y_src_t::mc3;
+  default: assert(false); __builtin_unreachable();
+  }
+}
+
+std::optional<op::d1_dst_t> parser_t::d1_dst()
+{
+  using namespace dsp::op;
+
+  if      (match(_mc0)) return {d1_dst_t::mc0};
+  else if (match(_mc1)) return {d1_dst_t::mc1};
+  else if (match(_mc2)) return {d1_dst_t::mc2};
+  else if (match(_mc3)) return {d1_dst_t::mc3};
+  else if (match(_rx))  return {d1_dst_t::rx};
+  else if (match(_pl))  return {d1_dst_t::pl};
+  else if (match(_ra0)) return {d1_dst_t::ra0};
+  else if (match(_wa0)) return {d1_dst_t::wa0};
+  else if (match(_lop)) return {d1_dst_t::lop};
+  else if (match(_top)) return {d1_dst_t::top};
+  else if (match(_ct0)) return {d1_dst_t::ct0};
+  else if (match(_ct1)) return {d1_dst_t::ct1};
+  else if (match(_ct2)) return {d1_dst_t::ct2};
+  else if (match(_ct3)) return {d1_dst_t::ct3};
   else                  return {};
 }
 
@@ -256,55 +274,60 @@ static op::d1_src_t d1_src(const token_t& token)
   }
 }
 
-std::optional<op::op_t *> parser_t::xyd1_bus()
+std::optional<op::op_t> parser_t::xyd1_bus()
 {
   if (match(_mov)) {
     if (match(_alu)) {
       consume(comma, "expected `,` after `mov alu`");
       consume(_a, "expected `a` after `mov alu,`");
-      return {new op::mov_alu_a_t()};
+      return {op::mov_alu_a_t()};
     } else if (match(_mul)) {
       consume(comma, "expected ',' after `mov mul`");
       consume(_p, "expected 'p' after `mov mul,`");
-      return {new op::mov_mul_p_t()};
+      return {op::mov_mul_p_t()};
     } else if (xyd1_src()) {
       const token_t& src_token = previous();
       consume(comma, "expected `,` after mov src operand");
       // this is starting to feel a bit ugly...
       bool d1 = src_token.type == _alh || src_token.type == _alh;
-      if      (!d1 && match(_y))        return {new op::mov_ram_y_t(xy_src(src_token))};
-      else if (!d1 && match(_a))        return {new op::mov_ram_a_t(xy_src(src_token))};
-      else if (!d1 && match(_x))        return {new op::mov_ram_x_t(xy_src(src_token))};
-      else if (!d1 && match(_p))        return {new op::mov_ram_p_t(xy_src(src_token))};
-      else if (auto dest_o = d1_dest()) return {new op::mov_ram_d1_t(d1_src(src_token), *dest_o)};
+      if      (!d1 && match(_y))        return {op::mov_ram_y_t(y_src(src_token))};
+      else if (!d1 && match(_a))        return {op::mov_ram_a_t(y_src(src_token))};
+      else if (!d1 && match(_x))        return {op::mov_ram_x_t(x_src(src_token))};
+      else if (!d1 && match(_p))        return {op::mov_ram_p_t(x_src(src_token))};
+      else if (auto dst_o = d1_dst()) return {op::mov_ram_d1_t(*dst_o, d1_src(src_token))};
       else
 	throw error(peek(), "expected x-bus, y-bus, or d-bus destination operand");
     } else {
       uimm_t<8> imm = uimm_t<8>(peek(), immediate());
       consume(comma, "expected `,`");
-      if (auto dest_o = d1_dest())
-	return {new op::mov_imm_d1_t(imm, *dest_o)};
+      if (auto dst_o = d1_dst())
+	return {op::mov_imm_d1_t(imm, *dst_o)};
       else
       	throw error(peek(), "expected d1 destination operand");
     }
   } else if (match(_clr)) {
     consume(_a, "expected `a` after `clr`");
-    return {new op::clr_a_t()};
+    return {op::clr_a_t()};
   } else {
     return {};
   }
 }
 
+static uint32_t op_mask(const op::op_t& op)
+{
+  return std::visit([](auto&& arg) -> uint32_t { return arg.mask(); }, op);
+}
+
 std::optional<stmt_t *> parser_t::op()
 {
   bool saw_nop = false;
-  std::vector<const op::op_t *> ops;
+  std::vector<op::op_t> ops;
   std::vector<const token_t *> tokens;
 
-  auto emplace_op = [&](const token_t& token, const op::op_t * a) {
-    for (std::vector<const op::op_t *>::size_type i = 0; i < ops.size(); i++) {
-      const op::op_t * b = ops[i];
-      if ((a->mask() & b->mask() & ~(0b11 << 30)) != 0) {
+  auto emplace_op = [&](const token_t& token, const op::op_t& a) {
+    for (decltype(ops)::size_type i = 0; i < ops.size(); i++) {
+      const op::op_t& b = ops[i];
+      if ((op_mask(a) & op_mask(b)) != 0) {
 	dsp::error(*tokens[i], "conflict");
 	throw error(token, "conflict");
       }
@@ -319,7 +342,7 @@ std::optional<stmt_t *> parser_t::op()
     if      (match(_nop))            saw_nop = 1;
     else if (auto op_o = alu()     ) emplace_op(token, *op_o);
     else if (auto op_o = xyd1_bus()) emplace_op(token, *op_o);
-    else                               break;
+    else                             break;
   }
   if (ops.size() != 0 || saw_nop)
     return {new op::control_word_t(ops)};
@@ -327,20 +350,20 @@ std::optional<stmt_t *> parser_t::op()
     return {};
 }
 
-load::dest_t parser_t::load_dest()
+load::dst_t parser_t::load_dst()
 {
   using namespace dsp::load;
 
-  if      (match(_mc0)) return dest_t::mc0;
-  else if (match(_mc1)) return dest_t::mc1;
-  else if (match(_mc2)) return dest_t::mc2;
-  else if (match(_mc3)) return dest_t::mc3;
-  else if (match(_rx))  return dest_t::rx;
-  else if (match(_pl))  return dest_t::pl;
-  else if (match(_ra0)) return dest_t::ra0;
-  else if (match(_wa0)) return dest_t::wa0;
-  else if (match(_lop)) return dest_t::lop;
-  else if (match(_pc))  return dest_t::pc;
+  if      (match(_mc0)) return dst_t::mc0;
+  else if (match(_mc1)) return dst_t::mc1;
+  else if (match(_mc2)) return dst_t::mc2;
+  else if (match(_mc3)) return dst_t::mc3;
+  else if (match(_rx))  return dst_t::rx;
+  else if (match(_pl))  return dst_t::pl;
+  else if (match(_ra0)) return dst_t::ra0;
+  else if (match(_wa0)) return dst_t::wa0;
+  else if (match(_lop)) return dst_t::lop;
+  else if (match(_pc))  return dst_t::pc;
   else
     throw error(peek(), "expected mvi destination");
 }
@@ -371,14 +394,14 @@ std::optional<stmt_t *> parser_t::load()
     const token_t& expr_token = peek();
     expr_t * expr = immediate();
     consume(comma, "expected `,`");
-    load::dest_t dest = parser_t::load_dest();
+    load::dst_t dst = parser_t::load_dst();
     if (match(comma)) {
       load::cond_t cond = load_cond();
       uimm_t<19> imm = uimm_t<19>(expr_token, expr);
-      return {new load::mvi_cond_t(imm, dest, cond)};
+      return {new load::mvi_cond_t(imm, dst, cond)};
     } else {
       uimm_t<25> imm = uimm_t<25>(expr_token, expr);
-      return {new load::mvi_t(imm, dest)};
+      return {new load::mvi_t(imm, dst)};
     }
   } else
     return {};
@@ -434,29 +457,29 @@ static bool dma_hold_p(const token_t& token)
   }
 }
 
-static dma::add_mode_t dma_add(const token_t& token)
+static dma::add_t dma_add(const token_t& token)
 {
   using namespace dsp::dma;
 
   switch (token.type) {
   case _dma:    [[fallthrough]];
-  case _dmah:   return add_mode_t::_2;
+  case _dmah:   return add_t::_2;
   case _dma0:   [[fallthrough]];
-  case _dmah0:  return add_mode_t::_0;
+  case _dmah0:  return add_t::_0;
   case _dma1:   [[fallthrough]];
-  case _dmah1:  return add_mode_t::_1;
+  case _dmah1:  return add_t::_1;
   case _dma2:   [[fallthrough]];
-  case _dmah2:  return add_mode_t::_2;
+  case _dmah2:  return add_t::_2;
   case _dma4:   [[fallthrough]];
-  case _dmah4:  return add_mode_t::_4;
+  case _dmah4:  return add_t::_4;
   case _dma8:   [[fallthrough]];
-  case _dmah8:  return add_mode_t::_8;
+  case _dmah8:  return add_t::_8;
   case _dma16:  [[fallthrough]];
-  case _dmah16: return add_mode_t::_16;
+  case _dmah16: return add_t::_16;
   case _dma32:  [[fallthrough]];
-  case _dmah32: return add_mode_t::_32;
+  case _dmah32: return add_t::_32;
   case _dma64:  [[fallthrough]];
-  case _dmah64: return add_mode_t::_64;
+  case _dmah64: return add_t::_64;
   default: assert(false);
   }
 }
@@ -486,18 +509,18 @@ dma::dst_t parser_t::dma_dst()
   }
 }
 
-std::optional<dma::length_ram_t> parser_t::dma_length_ram()
+std::optional<dma::ram_t> parser_t::dma_ram()
 {
   using namespace dsp::dma;
 
-  if      (match(_m0))  return length_ram_t::m0;
-  else if (match(_m1))  return length_ram_t::m1;
-  else if (match(_m2))  return length_ram_t::m2;
-  else if (match(_m3))  return length_ram_t::m3;
-  else if (match(_mc0)) return length_ram_t::mc0;
-  else if (match(_mc1)) return length_ram_t::mc1;
-  else if (match(_mc2)) return length_ram_t::mc2;
-  else if (match(_mc3)) return length_ram_t::mc3;
+  if      (match(_m0))  return ram_t::m0;
+  else if (match(_m1))  return ram_t::m1;
+  else if (match(_m2))  return ram_t::m2;
+  else if (match(_m3))  return ram_t::m3;
+  else if (match(_mc0)) return ram_t::mc0;
+  else if (match(_mc1)) return ram_t::mc1;
+  else if (match(_mc2)) return ram_t::mc2;
+  else if (match(_mc3)) return ram_t::mc3;
   else                  return {};
 }
 
@@ -506,27 +529,27 @@ std::optional<stmt_t *> parser_t::dma()
   if (dma_p(peek())) {
     const token_t& token = advance();
     bool hold = dma_hold_p(token);
-    dma::add_mode_t add = dma_add(token);
+    dma::add_t add = dma_add(token);
     if        (match(_d0)) {
       consume(comma, "expected `,`");
       dma::dst_t dst = dma_dst();
       consume(comma, "expected `,`");
-      if (auto length_ram_o = dma_length_ram()) {
-	return {new dma::d0_dst_ram_t(hold, add, dst, *length_ram_o)};
+      if (auto ram_o = dma_ram()) {
+	return {new dma::d0_dst_ram_t(add, hold, dst, *ram_o)};
       } else {
 	uimm_t<8> imm = uimm_t<8>(peek(), immediate());
-	return {new dma::d0_dst_imm_t(hold, add, dst, imm)};
+	return {new dma::d0_dst_imm_t(imm, add, hold, dst)};
       }
     } else {
       dma::src_t src = dma_src();
       consume(comma, "expected `,`");
       consume(_d0, "expected `d0`");
       consume(comma, "expected `,`");
-      if (auto length_ram_o = dma_length_ram()) {
-	return {new dma::src_d0_ram_t(hold, add, src, *length_ram_o)};
+      if (auto ram_o = dma_ram()) {
+	return {new dma::src_d0_ram_t(add, hold, src, *ram_o)};
       } else {
 	uimm_t<8> imm = uimm_t<8>(peek(), immediate());
-	return {new dma::src_d0_imm_t(hold, add, src, imm)};
+	return {new dma::src_d0_imm_t(imm, add, hold, src)};
       }
     }
   } else
@@ -555,10 +578,10 @@ std::optional<stmt_t *> parser_t::jump()
   if (match(_jmp)) {
     if (auto cond_o = jump_cond()) {
       consume(comma, "expected `,` after jump condition");
-      uimm_t<8> imm = uimm_t<8>(peek(), immediate());
-      return {new jump::jmp_cond_t(*cond_o, imm)};
+      uimm_t<19> imm = uimm_t<19>(peek(), immediate());
+      return {new jump::jmp_cond_t(imm, *cond_o)};
     } else {
-      uimm_t<8> imm = uimm_t<8>(peek(), immediate());
+      uimm_t<25> imm = uimm_t<25>(peek(), immediate());
       return {new jump::jmp_t(imm)};
     }
   } else

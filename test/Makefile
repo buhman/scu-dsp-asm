@@ -4,12 +4,16 @@ SRC = sample1.asm sample2a.asm sample2b.asm sample3.asm
 #SRC += cmpnm.asm fbtrans.asm loop_pr.asm udiv.asm
 EXPECT = $(patsubst %.asm,expect/%.bin,$(SRC))
 ACTUAL = $(patsubst %.asm,actual/%.bin,$(SRC))
+EXPECT_TXT = $(patsubst %.bin,%.txt,$(EXPECT))
+ACTUAL_TXT = $(patsubst %.bin,%.txt,$(ACTUAL))
 ALL = $(EXPECT) $(ACTUAL)
-ALL_TXT = $(patsubst %.bin,%.txt,$(ALL))
+ALL_TXT = $(EXPECT_TXT) $(ACTUAL_TXT)
 
 all: $(ALL)
-all-expect: $(EXPECT)
-all-actual: $(ACTUAL)
+expect: $(EXPECT)
+actual: $(ACTUAL)
+expect-txt: $(EXPECT_TXT)
+actual-txt: $(ACTUAL_TXT)
 all-txt: $(ALL_TXT)
 
 %.s: %.asm
@@ -35,7 +39,7 @@ expect/%.bin: %.s
 	@mkdir -p $(dir $@)
 	srec_cat -Output $@ -Binary $<
 
-actual/%.bin: %.asm
+actual/%.bin: %.asm ../scu-dsp-asm
 	@mkdir -p $(dir $@)
 	../scu-dsp-asm $< $@
 

@@ -14,7 +14,18 @@ struct visitor_t
   virtual T visit(const literal_t * expr) const = 0;
   virtual T visit(const unary_t * expr) const = 0;
 
-  virtual T visit(const op::alu_t * alu) const = 0;
+  virtual T visit(const op::andl_t * andl) const = 0;
+  virtual T visit(const op::orl_t * orl) const = 0;
+  virtual T visit(const op::xorl_t * xorl) const = 0;
+  virtual T visit(const op::add_t * add) const = 0;
+  virtual T visit(const op::sub_t * sub) const = 0;
+  virtual T visit(const op::ad2_t * ad2) const = 0;
+  virtual T visit(const op::sr_t * sr) const = 0;
+  virtual T visit(const op::rr_t * rr) const = 0;
+  virtual T visit(const op::sl_t * sl) const = 0;
+  virtual T visit(const op::rl_t * rl) const = 0;
+  virtual T visit(const op::rl8_t * rl8) const = 0;
+
   virtual T visit(const op::mov_ram_x_t * mov_ram_x) const = 0;
   virtual T visit(const op::mov_mul_p_t * mov_mul_p) const = 0;
   virtual T visit(const op::mov_ram_p_t * mov_ram_p) const = 0;
@@ -24,6 +35,7 @@ struct visitor_t
   virtual T visit(const op::mov_ram_a_t * mov_ram_a) const = 0;
   virtual T visit(const op::mov_imm_d1_t * mov_imm_d1) const = 0;
   virtual T visit(const op::mov_ram_d1_t * mov_ram_d1) const = 0;
+
   virtual T visit(const op::control_word_t * control_word) const = 0;
 
   virtual T visit(const load::mvi_t * mvi) const = 0;

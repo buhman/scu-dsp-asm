@@ -6,6 +6,8 @@
 #include "token.hpp"
 #include "expr.hpp"
 #include "stmt.hpp"
+#include "stmt_ins.hpp"
+#include "control_word.hpp"
 
 namespace dsp {
 
@@ -49,17 +51,17 @@ struct parser_t
   expr_t * orl();
   expr_t * primary();
 
-  std::optional<op::op_t *> alu();
+  std::optional<op::op_t> alu();
   bool xyd1_src();
-  std::optional<op::d1_dest_t> d1_dest();
-  std::optional<op::op_t *> xyd1_bus();
+  std::optional<op::d1_dst_t> d1_dst();
+  std::optional<op::op_t> xyd1_bus();
   std::optional<stmt_t *> op();
-  load::dest_t load_dest();
+  load::dst_t load_dst();
   load::cond_t load_cond();
   std::optional<stmt_t *> load();
   dma::src_t dma_src();
   dma::dst_t dma_dst();
-  std::optional<dma::length_ram_t> dma_length_ram();
+  std::optional<dma::ram_t> dma_ram();
   std::optional<stmt_t *> dma();
   std::optional<jump::cond_t> jump_cond();
   std::optional<stmt_t *> jump();

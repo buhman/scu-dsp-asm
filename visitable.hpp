@@ -11,7 +11,18 @@ struct unary_t;
 
 // instructions
 namespace op {
-struct alu_t;
+struct andl_t;
+struct orl_t;
+struct xorl_t;
+struct add_t;
+struct sub_t;
+struct ad2_t;
+struct sr_t;
+struct rr_t;
+struct sl_t;
+struct rl_t;
+struct rl8_t;
+
 struct mov_ram_x_t;
 struct mov_ram_x_t;
 struct mov_mul_p_t;
@@ -22,6 +33,7 @@ struct mov_alu_a_t;
 struct mov_ram_a_t;
 struct mov_imm_d1_t;
 struct mov_ram_d1_t;
+
 struct control_word_t;
 }
 

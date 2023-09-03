@@ -1,5 +1,6 @@
 #include "ast_printer.hpp"
 #include "stmt_string.hpp"
+#include "control_word.hpp"
 
 namespace dsp {
 
@@ -96,14 +97,75 @@ void printer_t::parenthesize(const std::string_view s, const expr_t * a, const e
 
 // instructions
 
-void printer_t::visit(const op::alu_t * alu) const
+void printer_t::visit(const op::andl_t * andl) const
 {
-  parenthesize(op::alu_type_string[static_cast<int>(alu->type)]);
+  (void)andl;
+  parenthesize("andl");
+}
+
+void printer_t::visit(const op::orl_t * orl) const
+{
+  (void)orl;
+  parenthesize("orl");
+}
+
+void printer_t::visit(const op::xorl_t * xorl) const
+{
+  (void)xorl;
+  parenthesize("xorl");
+}
+
+void printer_t::visit(const op::add_t * add) const
+{
+  (void)add;
+  parenthesize("add");
+}
+
+void printer_t::visit(const op::sub_t * sub) const
+{
+  (void)sub;
+  parenthesize("sub");
+}
+
+void printer_t::visit(const op::ad2_t * ad2) const
+{
+  (void)ad2;
+  parenthesize("ad2");
+}
+
+void printer_t::visit(const op::sr_t * sr) const
+{
+  (void)sr;
+  parenthesize("sr");
+}
+
+void printer_t::visit(const op::rr_t * rr) const
+{
+  (void)rr;
+  parenthesize("rr");
+}
+
+void printer_t::visit(const op::sl_t * sl) const
+{
+  (void)sl;
+  parenthesize("sl");
+}
+
+void printer_t::visit(const op::rl_t * rl) const
+{
+  (void)rl;
+  parenthesize("rl");
+}
+
+void printer_t::visit(const op::rl8_t * rl8) const
+{
+  (void)rl8;
+  parenthesize("rl8");
 }
 
 void printer_t::visit(const op::mov_ram_x_t * mov_ram_x) const
 {
-  parenthesize("mov", op::xy_src_string[static_cast<int>(mov_ram_x->src)], "x");
+  parenthesize("mov", op::x_src_string[static_cast<int>(mov_ram_x->src.value)], "x");
 }
 
 void printer_t::visit(const op::mov_mul_p_t * mov_mul_p) const
@@ -114,12 +176,12 @@ void printer_t::visit(const op::mov_mul_p_t * mov_mul_p) const
 
 void printer_t::visit(const op::mov_ram_p_t * mov_ram_p) const
 {
-  parenthesize("mov", op::xy_src_string[static_cast<int>(mov_ram_p->src)], "p");
+  parenthesize("mov", op::x_src_string[static_cast<int>(mov_ram_p->src.value)], "p");
 }
 
 void printer_t::visit(const op::mov_ram_y_t * mov_ram_y) const
 {
-  parenthesize("mov", op::xy_src_string[static_cast<int>(mov_ram_y->src)], "y");
+  parenthesize("mov", op::y_src_string[static_cast<int>(mov_ram_y->src.value)], "y");
 }
 
 void printer_t::visit(const op::clr_a_t * clr_a) const
@@ -136,28 +198,28 @@ void printer_t::visit(const op::mov_alu_a_t * mov_alu_a) const
 
 void printer_t::visit(const op::mov_ram_a_t * mov_ram_a) const
 {
-  parenthesize("mov", op::xy_src_string[static_cast<int>(mov_ram_a->src)], "a");
+  parenthesize("mov", op::y_src_string[static_cast<int>(mov_ram_a->src.value)], "a");
 }
 
 void printer_t::visit(const op::mov_imm_d1_t * mov_imm_d1) const
 {
   parenthesize("mov",
                mov_imm_d1->imm.expr,
-               op::d1_dest_string[static_cast<int>(mov_imm_d1->dest)]);
+               op::d1_dst_string[static_cast<int>(mov_imm_d1->dst.value)]);
 }
 
 void printer_t::visit(const op::mov_ram_d1_t * mov_ram_d1) const
 {
   parenthesize("mov",
-               op::d1_src_string[static_cast<int>(mov_ram_d1->src)],
-               op::d1_dest_string[static_cast<int>(mov_ram_d1->dest)]);
+               op::d1_src_string[static_cast<int>(mov_ram_d1->src.value)],
+               op::d1_dst_string[static_cast<int>(mov_ram_d1->dst.value)]);
 }
 
 void printer_t::visit(const op::control_word_t * control_word) const
 {
   os << "(control_word ";
   for (const auto& op : control_word->ops) {
-    dynamic_cast<const stmt_t *>(op)->accept(this);
+    std::visit([*this](auto&& arg){ (arg).accept(this); }, op);
     os << ' ';
   }
   os << ')';
@@ -165,27 +227,27 @@ void printer_t::visit(const op::control_word_t * control_word) const
 
 void printer_t::visit(const load::mvi_t * mvi) const
 {
-  parenthesize("mvi", mvi->imm.expr, load::dest_string[static_cast<int>(mvi->dest)]);
+  parenthesize("mvi", mvi->imm.expr, load::dst_string[static_cast<int>(mvi->dst.value)]);
 }
 
 void printer_t::visit(const load::mvi_cond_t * mvi_cond) const
 {
   parenthesize("mvi",
                mvi_cond->imm.expr,
-               load::dest_string[static_cast<int>(mvi_cond->dest)],
-               load::cond_string[static_cast<int>(mvi_cond->cond)]);
+               load::dst_string[static_cast<int>(mvi_cond->dst.value)],
+               load::cond_string[static_cast<int>(mvi_cond->cond.value)]);
 }
 
-static std::string dma_hold_add(bool hold, dma::add_mode_t add)
+static std::string dma_hold_add(dma::hold_t hold, dma::add_t add)
 {
-  return dma::hold_mode_string[static_cast<int>(hold)]
-       + dma::add_mode_string[static_cast<int>(add)];
+  return dma::hold_mode_string[static_cast<int>(hold.value)]
+       + dma::add_mode_string[static_cast<int>(add.value)];
 }
 
 void printer_t::visit(const dma::src_d0_imm_t * src_d0_imm) const
 {
   parenthesize(dma_hold_add(src_d0_imm->hold, src_d0_imm->add),
-               dma::src_string[static_cast<int>(src_d0_imm->src)],
+               dma::src_string[static_cast<int>(src_d0_imm->src.value)],
 	       "d0",
                src_d0_imm->imm.expr);
 }
@@ -194,24 +256,24 @@ void printer_t::visit(const dma::d0_dst_imm_t * d0_dst_imm) const
 {
   parenthesize(dma_hold_add(d0_dst_imm->hold, d0_dst_imm->add),
 	       "d0",
-               dma::dst_string[static_cast<int>(d0_dst_imm->dst)],
+               dma::dst_string[static_cast<int>(d0_dst_imm->dst.value)],
                d0_dst_imm->imm.expr);
 }
 
 void printer_t::visit(const dma::src_d0_ram_t * src_d0_ram) const
 {
   parenthesize(dma_hold_add(src_d0_ram->hold, src_d0_ram->add),
-               dma::src_string[static_cast<int>(src_d0_ram->src)],
+               dma::src_string[static_cast<int>(src_d0_ram->src.value)],
 	       "d0",
-               dma::length_ram_string[static_cast<int>(src_d0_ram->ram)]);
+               dma::length_ram_string[static_cast<int>(src_d0_ram->ram.value)]);
 }
 
 void printer_t::visit(const dma::d0_dst_ram_t * d0_dst_ram) const
 {
   parenthesize(dma_hold_add(d0_dst_ram->hold, d0_dst_ram->add),
 	       "d0",
-               dma::dst_string[static_cast<int>(d0_dst_ram->dst)],
-               dma::length_ram_string[static_cast<int>(d0_dst_ram->ram)]);
+               dma::dst_string[static_cast<int>(d0_dst_ram->dst.value)],
+               dma::length_ram_string[static_cast<int>(d0_dst_ram->ram.value)]);
 }
 
 void printer_t::visit(const jump::jmp_t * jmp) const
@@ -222,7 +284,7 @@ void printer_t::visit(const jump::jmp_t * jmp) const
 void printer_t::visit(const jump::jmp_cond_t * jmp_cond) const
 {
   parenthesize("jmp",
-	       jump::cond_string[static_cast<int>(jmp_cond->cond)],
+	       jump::cond_string[static_cast<int>(jmp_cond->cond.value)],
 	       jmp_cond->imm.expr);
 }
 

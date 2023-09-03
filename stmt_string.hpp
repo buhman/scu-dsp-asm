@@ -7,15 +7,16 @@ namespace dsp {
 namespace op {
 
 extern const std::string alu_type_string[];
-extern const std::string xy_src_string[];
-extern const std::string d1_dest_string[];
+extern const std::string x_src_string[];
+extern const std::string y_src_string[];
+extern const std::string d1_dst_string[];
 extern const std::string d1_src_string[];
 
 }
 
 namespace load {
 
-extern const std::string dest_string[];
+extern const std::string dst_string[];
 extern const std::string cond_string[];
 
 } // load
