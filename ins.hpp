@@ -9,14 +9,10 @@ namespace dsp {
 template <typename T>
 struct ins_t
 {
-  /*
-  virtual uint32_t bits() const;
-
   uint32_t render() const
   {
-    return T::code() | bits();
+    return T::code() | T::bits();
   }
-  */
 
   static bool pred(uint32_t ins)
   {

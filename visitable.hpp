@@ -37,7 +37,7 @@ struct mov_ram_d1_t;
 struct control_word_t;
 }
 
-namespace load{
+namespace load {
 struct mvi_t;
 struct mvi_cond_t;
 }

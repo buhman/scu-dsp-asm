@@ -3,28 +3,37 @@ CXXFLAGS = -Og -g -Wall -Wextra -Werror -Wfatal-errors -Wno-c99-designator -std=
 LDFLAGS =
 
 TARGET ?=
-CXX = $(TARGET)clang++
+CXX = $(TARGET)g++
 
-SRC = main.cpp
-SRC += lexer.cpp
-SRC += ast_printer.cpp
-SRC += ast_resolver.cpp
-SRC += ast_emitter.cpp
-SRC += parser.cpp
-SRC += stmt_string.cpp
-OBJ = $(patsubst %.cpp,%.o,$(SRC))
-DEP = $(patsubst %.cpp,%.d,$(SRC))
+ASM_SRC = main.cpp
+ASM_SRC += lexer.cpp
+ASM_SRC += ast_printer.cpp
+ASM_SRC += ast_resolver.cpp
+ASM_SRC += ast_emitter.cpp
+ASM_SRC += parser.cpp
+ASM_SRC += stmt_string.cpp
+ASM_OBJ = $(patsubst %.cpp,%.o,$(ASM_SRC))
+ASM_DEP = $(patsubst %.cpp,%.d,$(ASM_SRC))
+ASM_MAIN ?= scu-dsp-asm
 
-MAIN ?= scu-dsp-asm
+DIS_SRC = disassemble.cpp
+DIS_SRC += ast_printer.cpp
+DIS_SRC += stmt_string.cpp
+DIS_OBJ = $(patsubst %.cpp,%.o,$(DIS_SRC))
+DIS_DEP = $(patsubst %.cpp,%.d,$(DIS_SRC))
+DIS_MAIN ?= scu-dsp-dis
 
-all: $(MAIN)
+all: $(ASM_MAIN) $(DIS_MAIN)
 
--include $(DEP)
+-include $(sort $(ASM_DEP) $(DIS_DEP))
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $(basename $<).d -c $< -o $@
 
-$(MAIN): $(OBJ)
+$(SRC_MAIN): $(SRC_OBJ)
+	$(CXX) $(STATIC) $(LDFLAGS) $^ -o $@
+
+$(DIS_MAIN): $(DIS_OBJ)
 	$(CXX) $(STATIC) $(LDFLAGS) $^ -o $@
 
 clean:

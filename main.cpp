@@ -1,8 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <optional>
-#include <bitset>
 #include <sstream>
 #include <array>
 #include <iomanip>
@@ -72,7 +70,6 @@ static void run(std::ostream& os, std::string source, bool hex_output, bool verb
   while (auto stmt_o = pass2.statement()) {
     uint32_t output = (*stmt_o)->accept(&emitter);
     if (output != 0xffff'ffff) {
-      //std::cout << std::bitset<32>(output) << std::endl;
       if (hex_output) write_hex(os, output);
       else            write_raw(os, output);
     }
