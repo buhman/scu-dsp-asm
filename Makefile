@@ -5,6 +5,8 @@ LDFLAGS =
 TARGET ?=
 CXX = $(TARGET)g++
 
+SUFFIX ?=
+
 ASM_SRC = main.cpp
 ASM_SRC += lexer.cpp
 ASM_SRC += ast_printer.cpp
@@ -14,14 +16,14 @@ ASM_SRC += parser.cpp
 ASM_SRC += stmt_string.cpp
 ASM_OBJ = $(patsubst %.cpp,%.o,$(ASM_SRC))
 ASM_DEP = $(patsubst %.cpp,%.d,$(ASM_SRC))
-ASM_MAIN ?= scu-dsp-asm
+ASM_MAIN ?= scu-dsp-asm$(SUFFIX)
 
 DIS_SRC = disassemble.cpp
 DIS_SRC += ast_printer.cpp
 DIS_SRC += stmt_string.cpp
 DIS_OBJ = $(patsubst %.cpp,%.o,$(DIS_SRC))
 DIS_DEP = $(patsubst %.cpp,%.d,$(DIS_SRC))
-DIS_MAIN ?= scu-dsp-dis
+DIS_MAIN ?= scu-dsp-dis$(SUFFIX)
 
 all: $(ASM_MAIN) $(DIS_MAIN)
 
@@ -30,7 +32,7 @@ all: $(ASM_MAIN) $(DIS_MAIN)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $(basename $<).d -c $< -o $@
 
-$(SRC_MAIN): $(SRC_OBJ)
+$(ASM_MAIN): $(ASM_OBJ)
 	$(CXX) $(STATIC) $(LDFLAGS) $^ -o $@
 
 $(DIS_MAIN): $(DIS_OBJ)
