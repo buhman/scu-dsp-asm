@@ -19,9 +19,9 @@ struct nop_t : stmt_accept_t<nop_t>, ins_t<nop_t>
     (void)code;
   }
 
-  uint32_t mask() const { return 0xffff'ffff; }
-  uint32_t code() const { return 0x0000'0000; }
-  uint32_t bits() const { return 0;           }
+  static constexpr uint32_t mask() { return 0xffff'ffff; }
+  static constexpr uint32_t code() { return 0x0000'0000; }
+  static constexpr uint32_t bits() { return 0;           }
 };
 
 } // namespace nop

@@ -25,7 +25,8 @@ static dsp::stmt_t * decompile(uint32_t code)
   using namespace dsp::end;
   using namespace dsp::nop;
 
-  if      (control_word_t::pred(code)) return new control_word_t(code);
+  if      (nop_t::pred(code))          return new nop_t(code);
+  else if (control_word_t::pred(code)) return new control_word_t(code);
   else if (mvi_t::pred(code))          return new mvi_t(code);
   else if (mvi_cond_t::pred(code))     return new mvi_cond_t(code);
   else if (d0_dst_imm_t::pred(code))   return new d0_dst_imm_t(code);
@@ -78,8 +79,6 @@ static int run_file(char const * const input_filename)
 
 int main(const int argc, char const * const argv[])
 {
-  const std::string c_source("-s");
-
   switch (argc) {
   case 2: return run_file(argv[1]);
   default:
