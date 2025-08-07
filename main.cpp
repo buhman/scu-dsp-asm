@@ -11,6 +11,7 @@
 #include "ast_resolver.hpp"
 #include "ast_emitter.hpp"
 #include "parser.hpp"
+#include "decompile.hpp"
 
 namespace dsp {
 
@@ -31,13 +32,21 @@ static std::array<T, 4> uint32_be(uint32_t v)
 
 static void write_hex(std::ostream& os, uint32_t v)
 {
+  dsp::ast::printer_t printer(os);
+
+  dsp::stmt_t * stmt = decompile(v);
+
   const auto out = uint32_be<int>(v);
   os << std::setfill('0') << std::right << std::hex
      << "0x"
      << std::setw(2) << out[0]
      << std::setw(2) << out[1]
      << std::setw(2) << out[2]
-     << std::setw(2) << out[3] << ',' << std::endl;
+     << std::setw(2) << out[3] << ", // ";
+
+  stmt->accept(&printer);
+
+  os << std::endl;
 }
 
 static void write_raw(std::ostream& os, uint32_t v)
