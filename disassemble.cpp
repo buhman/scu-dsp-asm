@@ -26,10 +26,11 @@ static void run(std::string source)
     uint32_t code = uint32_be(buf.substr(i * 4, 4));
 
     std::cout << std::setfill('0') << std::right << std::hex
+              << std::setw(3) << (int)i << "   "
               << std::setw(2) << (int)(uint8_t)buf[i * 4 + 0]
               << std::setw(2) << (int)(uint8_t)buf[i * 4 + 1]
               << std::setw(2) << (int)(uint8_t)buf[i * 4 + 2]
-              << std::setw(2) << (int)(uint8_t)buf[i * 4 + 3] << "  ";
+              << std::setw(2) << (int)(uint8_t)buf[i * 4 + 3] << "   ";
 
     dsp::stmt_t * stmt = decompile(code);
     stmt->accept(&printer);
