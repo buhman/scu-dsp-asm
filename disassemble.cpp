@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <string_view>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 
 #include "stmt.hpp"
@@ -20,7 +21,8 @@ static uint32_t uint32_be(std::string_view v)
 static void run(std::string source)
 {
   std::string_view buf(source);
-  dsp::ast::printer_t printer(std::cout);
+  std::stringstream os;
+  dsp::ast::printer_t printer(os);
 
   for (decltype(buf)::size_type i = 0; i < (buf.length() / 4); i++) {
     uint32_t code = uint32_be(buf.substr(i * 4, 4));
@@ -34,6 +36,9 @@ static void run(std::string source)
 
     dsp::stmt_t * stmt = decompile(code);
     stmt->accept(&printer);
+    std::cout << os.rdbuf();
+    os.str("");
+    os.clear();
     std::cout << std::endl;
   }
 }

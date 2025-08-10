@@ -20,6 +20,8 @@ struct printer_t : visitor_t<void>
 
   std::ostream& os;
 
+  void insert_indent(int current_type) const;
+
   void visit(const binary_t * binary) const;
   void visit(const grouping_t * grouping) const;
   void visit(const identifier_t * identifier) const;

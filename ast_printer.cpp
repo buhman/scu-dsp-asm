@@ -97,6 +97,36 @@ void printer_t::parenthesize(const std::string_view s, const expr_t * a, const e
 
 // instructions
 
+enum {
+  type_alu    = (0),
+  type_x_bus  = (1),
+  type_y_bus  = (2),
+  type_d1_bus = (3),
+};
+
+//           111111111122222222223333333333444444444455555555556
+// 0123456789012345678901234567890123456789012345678901234567890
+// ad2   mov mc0,x  mov mul,p   mov mc1,y  mov alu,a   mov 0,ct1
+
+void printer_t::insert_indent(int current_type) const
+{
+  constexpr int indents[4] = {
+    [0] = 0,
+    [1] = 6,
+    [2] = 29,
+    [3] = 52,
+  };
+  int desired_indent = indents[current_type];
+  int current_indent = os.tellp();
+
+  int indent = desired_indent - current_indent;
+  if (indent > 0) {
+    for (int i = 0; i < indent; i++) {
+      os << ' ';
+    }
+  }
+}
+
 void printer_t::visit(const op::andl_t * andl) const
 {
   (void)andl;
@@ -165,6 +195,7 @@ void printer_t::visit(const op::rl8_t * rl8) const
 
 void printer_t::visit(const op::mov_ram_x_t * mov_ram_x) const
 {
+  insert_indent(type_x_bus);
   os << "mov"
      << ' '
      << op::x_src_string[static_cast<int>(mov_ram_x->src.value)]
@@ -173,12 +204,14 @@ void printer_t::visit(const op::mov_ram_x_t * mov_ram_x) const
 
 void printer_t::visit(const op::mov_mul_p_t * mov_mul_p) const
 {
+  insert_indent(type_x_bus);
   (void)mov_mul_p;
   os << "mov mul,p";
 }
 
 void printer_t::visit(const op::mov_ram_p_t * mov_ram_p) const
 {
+  insert_indent(type_x_bus);
   os << "mov"
      << ' '
      << op::x_src_string[static_cast<int>(mov_ram_p->src.value)]
@@ -187,6 +220,7 @@ void printer_t::visit(const op::mov_ram_p_t * mov_ram_p) const
 
 void printer_t::visit(const op::mov_ram_y_t * mov_ram_y) const
 {
+  insert_indent(type_y_bus);
   os << "mov"
      << ' '
      << op::y_src_string[static_cast<int>(mov_ram_y->src.value)]
@@ -195,18 +229,21 @@ void printer_t::visit(const op::mov_ram_y_t * mov_ram_y) const
 
 void printer_t::visit(const op::clr_a_t * clr_a) const
 {
+  insert_indent(type_y_bus);
   (void)clr_a;
   os << "clr a";
 }
 
 void printer_t::visit(const op::mov_alu_a_t * mov_alu_a) const
 {
+  insert_indent(type_y_bus);
   (void)mov_alu_a;
   os << "mov alu,a";
 }
 
 void printer_t::visit(const op::mov_ram_a_t * mov_ram_a) const
 {
+  insert_indent(type_y_bus);
   os << "mov"
      << ' '
      << op::y_src_string[static_cast<int>(mov_ram_a->src.value)]
@@ -215,6 +252,7 @@ void printer_t::visit(const op::mov_ram_a_t * mov_ram_a) const
 
 void printer_t::visit(const op::mov_imm_d1_t * mov_imm_d1) const
 {
+  insert_indent(type_d1_bus);
   os << "mov"
      << ' ';
   mov_imm_d1->imm.expr->accept(this);
@@ -224,6 +262,7 @@ void printer_t::visit(const op::mov_imm_d1_t * mov_imm_d1) const
 
 void printer_t::visit(const op::mov_ram_d1_t * mov_ram_d1) const
 {
+  insert_indent(type_d1_bus);
   os << "mov"
      << ' '
      << op::d1_src_string[static_cast<int>(mov_ram_d1->src.value)]
